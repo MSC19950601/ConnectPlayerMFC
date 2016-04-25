@@ -6,6 +6,8 @@
 #include "ConnectPlayerMFC.h"
 #include "ConnectPlayerMFCDlg.h"
 #include "afxdialogex.h"
+#include "EasySize.h"
+#include "GameDig.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -72,6 +74,11 @@ BEGIN_MESSAGE_MAP(CConnectPlayerMFCDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_QUIT, &CConnectPlayerMFCDlg::OnBnClickedButtonQuit)
 END_MESSAGE_MAP()
 
+BEGIN_EASYSIZE_MAP(CConnectPlayerMFCDlg)
+	//EASYSIZE(control, left, top, right, bottom, options)
+	//EASYSIZE(IDB_MAIN_BG, ES_BORDER, ES_BORDER, ES_BORDER, ES_BORDER, 0)
+END_EASYSIZE_MAP
+
 
 // CConnectPlayerMFCDlg 消息处理程序
 
@@ -105,6 +112,7 @@ BOOL CConnectPlayerMFCDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	//主界面设计
 	InitBackground();
 	CRect rtWin;
 	CRect rtClient;
@@ -114,6 +122,10 @@ BOOL CConnectPlayerMFCDlg::OnInitDialog()
 	int nSpanHeight = rtWin.Height() - rtClient.Height();
 	MoveWindow(0, 0, 800 + nSpanWidth, 600 + nSpanHeight);
 	CenterWindow();
+
+	//控件自适应大小
+	INIT_EASYSIZE;
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -199,24 +211,31 @@ void CConnectPlayerMFCDlg::InitBackground() {
 	//加载位图
 	CBitmap bmpMain;
 	bmpMain.LoadBitmapW(IDB_MAIN_BG);
-
 	//创建兼容DC
 	CClientDC dc(this);
 	m_dcMem.CreateCompatibleDC(&dc);
-
-
 	//将位图选进DC
 	m_dcMem.SelectObject(&bmpMain);
 	//
 }
 
 
-
+void CConnectPlayerMFCDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CConnectPlayerMFCDlg::OnSize(nType, cx, cy);
+	// TODO: Add your message handler code here
+	UPDATE_EASYSIZE;
+}
 
 
 void CConnectPlayerMFCDlg::OnBnClickedButtonBasicModel()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	this->ShowWindow(SW_HIDE);
+	CGameDig dlg;
+	dlg.DoModal();
+	this->ShowWindow(SW_SHOW);
+
 }
 
 

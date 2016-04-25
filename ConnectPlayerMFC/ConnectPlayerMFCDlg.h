@@ -1,5 +1,6 @@
 
 // ConnectPlayerMFCDlg.h : 头文件
+#include "easysize.h"
 //
 
 #pragma once
@@ -8,6 +9,9 @@
 // CConnectPlayerMFCDlg 对话框
 class CConnectPlayerMFCDlg : public CDialogEx
 {
+
+	DECLARE_EASYSIZE
+
 // 构造
 public:
 	CConnectPlayerMFCDlg(CWnd* pParent = NULL);	// 标准构造函数
@@ -43,4 +47,8 @@ public:
 	afx_msg void OnBnClickedButtonRisk();
 	afx_msg void OnBnClickedButtonHelp();
 	afx_msg void OnBnClickedButtonQuit();
+
+	//实现控件自适应界面
+
+	void OnSize(UINT nType, int cx, int cy);
 };

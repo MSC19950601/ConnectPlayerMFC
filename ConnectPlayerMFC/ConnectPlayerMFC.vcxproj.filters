@@ -33,6 +33,12 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="EasySize.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectPlayerMFC.cpp">
@@ -42,6 +48,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDig.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,6 +72,15 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\bitmap1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\pic\background_2.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\pic\background_1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\pic\background_1.jpg">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
