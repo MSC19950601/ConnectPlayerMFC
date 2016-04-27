@@ -83,5 +83,35 @@
     <Image Include="theme\pic\background_1.jpg">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="theme\cellPic\y0.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\cellPic\y1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\cellPic\y2.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\cellPic\y3.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\cellPic\y4.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\cellPic\y5.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\cellPic\y6.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\cellPic\y7.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\cellPic\y8.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\cellPic\y9.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
