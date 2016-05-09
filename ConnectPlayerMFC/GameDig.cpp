@@ -57,10 +57,10 @@ END_MESSAGE_MAP()
 
 void CGameDig::InitBackground()
 {
-	CClientDC dc(this);
-	HANDLE hBmpBG = ::LoadImage(NULL, _T("theme\\pic\\background_2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-	m_dcMem.CreateCompatibleDC(&dc);
-	m_dcMem.SelectObject(hBmpBG);
+	//CClientDC dc(this);
+	//HANDLE hBmpBG = ::LoadImage(NULL, _T("theme\\pic\\background_2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	//m_dcMem.CreateCompatibleDC(&dc);
+	//m_dcMem.SelectObject(hBmpBG);
 
 	//m_dcMem.CreateCompatibleDC(&dc);
 	//CBitmap bmpMem;
@@ -77,6 +77,17 @@ void CGameDig::InitBackground()
 	//int nSpanHeight = rtWin.Height() - rtClient.Height();
 	//MoveWindow(0, 0, 800 + nSpanWidth, 600 + nSpanHeight);
 	//CenterWindow();
+
+	CClientDC dc(this);
+	HANDLE hBmpBG = ::LoadImageW(NULL, _T("theme\\pic\\background_2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	m_dcBG.CreateCompatibleDC(&dc);
+	m_dcBG.SelectObject(hBmpBG);
+
+	m_dcMem.CreateCompatibleDC(&dc);
+	CBitmap bmpMem;
+	bmpMem.CreateCompatibleBitmap(&dc, 800, 600);
+	m_dcMem.SelectObject(&bmpMem);
+	m_dcMem.BitBlt(0, 0, 800, 600, &m_dcBG, 0, 0, SRCCOPY);
 	/*CBitmap bmpMain;
 	bmpMain.LoadBitmapW(IDB_MAIN_BG);
 	//创建兼容DC
@@ -112,11 +123,11 @@ void CGameDig::OnPaint()
 
 void CGameDig::InitElement() {
 	CClientDC dc(this);
-	HANDLE bmp = ::LoadImage(NULL, _T("theme\\cellPic\\celladded2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE bmp = ::LoadImage(NULL, _T("theme\\cellPic\\cell1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     m_dcElement.CreateCompatibleDC(&dc);
 	m_dcElement.SelectObject(bmp);
 
-	HANDLE bmpMark = ::LoadImage(NULL, _T("theme\\cellPic\\celladded3.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE bmpMark = ::LoadImage(NULL, _T("theme\\cellPic\\cell2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	m_dcMark.CreateCompatibleDC(&dc);
 	m_dcMark.SelectObject(bmpMark);
 }
@@ -136,6 +147,8 @@ void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 			m_anMap[i][j] = anMap[i][j];
 		}
 	}
+
+	//UpdateMap();
 
 	int nLeft = 50;
 	int nTop = 50;
@@ -202,8 +215,8 @@ void CGameDig::UpdateMap()
 	int nElemW = m_sizeElem.cx;
 	int nElemH = m_sizeElem.cy;
 
+	//m_dcMem.BitBlt(m_rtGameRect.left, m_rtGameRect.top, m_rtGameRect.Width(), m_rtGameRect.Height(), &m_dcMem, m_rtGameRect.left, m_rtGameRect.top, SRCCOPY);
 	m_dcMem.BitBlt(m_rtGameRect.left, m_rtGameRect.top, m_rtGameRect.Width(), m_rtGameRect.Height(), &m_dcBG, m_rtGameRect.left, m_rtGameRect.top, SRCCOPY);
-
 	for (int i = 0; i < 4;i++) {
 		for (int j = 0;j < 4;j++) {
 			//m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, m_anMap[i][j] * nElemH, SRCCOPY);
@@ -211,7 +224,7 @@ void CGameDig::UpdateMap()
 			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, m_anMap[i][j] * nElemH, SRCAND);
 		}
 	}
-	UpdateMap();
+	//UpdateMap();
 	Invalidate(FALSE);
 }
 
@@ -226,7 +239,7 @@ void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 	int nRow = (point.y - m_ptGameTop.y) / m_sizeElem.cy;
 	int nCol = (point.x - m_ptGameTop.x) / m_sizeElem.cx;
 
-	if (nRow > 4 || nCol > 4) {
+	if (nRow > 4/*3*/ || nCol > 4/*3*/) {
 		return CDialog::OnLButtonUp(nFlags, point);
 	}
 	if (m_bFirstPoint) {
@@ -236,38 +249,38 @@ void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 	}
 	else {
 		DrawTipFrame(nRow, nCol);
-		
 		m_ptSelSec.x = nCol;
 		m_ptSelSec.y = nRow;
          
 		//判断是否是相同图片
-		if (!IsLink()) {
+		if (IsLink()) {
 			//画提示线
 			DrawTipLine();
 			m_anMap[m_ptSelFirst.y][m_ptSelFirst.x] = -1;
 			m_anMap[m_ptSelSec.y][m_ptSelSec.x] = -1;
 			UpdateMap();
 		}
-		InvalidateRect(m_rtGameRect, FALSE);
 		Sleep(200);
+		InvalidateRect(m_rtGameRect, FALSE);
+		
 	}
 	m_bFirstPoint = !m_bFirstPoint;
-	CDialogEx::OnLButtonUp(nFlags, point);
+	//CDialogEx::OnLButtonUp(nFlags, point);
 }
 
 void CGameDig::DrawTipFrame(int nRow, int nCol) {
 	CClientDC dc(this);
 	CBrush brush(RGB(233, 43, 43));
 	CRect rtTipFrame;
-	rtTipFrame.top = m_ptGameTop.x + nCol * m_sizeElem.cx;
-	rtTipFrame.left = m_ptGameTop.y + nRow * m_sizeElem.cy;
+	rtTipFrame.left = m_ptGameTop.x + nCol * m_sizeElem.cx;
+	rtTipFrame.top = m_ptGameTop.y + nRow * m_sizeElem.cy;
 	rtTipFrame.right = rtTipFrame.left + m_sizeElem.cx;
 	rtTipFrame.bottom = rtTipFrame.top + m_sizeElem.cy;
 	dc.FrameRect(rtTipFrame, &brush);
 }
 
 bool CGameDig::IsLink() {
-	if (m_anMap[m_ptSelFirst.y][m_ptSelFirst.x] == m_anMap[m_ptSelSec.y][m_ptSelSec.y]) {
+	if (m_anMap[m_ptSelFirst.y][m_ptSelFirst.x] == m_anMap[m_ptSelSec.y][m_ptSelSec.x]) {
 		return true;
 	}
 	return false;
@@ -275,7 +288,7 @@ bool CGameDig::IsLink() {
 
 void CGameDig::DrawTipLine() {
 	CClientDC dc(this);
-	CPen penLine(PS_SOLID, 12, RGB(0, 255, 0));
+	CPen penLine(PS_SOLID, 2, RGB(0, 255, 0));
 	CPen * pOldPen = dc.SelectObject(&penLine);
 	dc.MoveTo(
 		m_ptGameTop.x + m_ptSelFirst.x + m_sizeElem.cx + m_sizeElem.cx / 2,
