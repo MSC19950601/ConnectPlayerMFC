@@ -1,5 +1,7 @@
 #pragma once
 
+#include "global.h"
+#include "GameControl.h"
 
 // CGameDig 对话框
 
@@ -19,8 +21,8 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	void DrawTipFrame(int nRow, int nCol);
-	bool IsLink();
-	void DrawTipLine();
+	//bool IsLink();
+	void DrawTipLine(Vertex asvPath[2]);
 	DECLARE_MESSAGE_MAP()
 
 	void InitElement();
@@ -32,13 +34,18 @@ protected:
 	CDC m_dcMark;
 	CDC m_dcBG;
 
-	int m_anMap[4][4];
+	//int m_anMap[4][4];
 	CPoint m_ptGameTop;
 	CSize m_sizeElem;
 	bool m_bFirstPoint;
-	CPoint m_ptSelFirst;
-	CPoint m_ptSelSec;
+
 	CRect m_rtGameRect;
+
+	//CPoint m_ptSelFirst;
+	//CPoint m_ptSelSec;
+	Vertex m_ptSelFirst;
+	Vertex m_ptSelSec;
+	CGameControl m_gameControl;
 public:
 	
 	virtual BOOL OnInitDialog();

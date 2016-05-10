@@ -192,7 +192,9 @@
     <ClInclude Include="ConnectPlayerMFC.h" />
     <ClInclude Include="ConnectPlayerMFCDlg.h" />
     <ClInclude Include="EasySize.h" />
+    <ClInclude Include="GameControl.h" />
     <ClInclude Include="GameDig.h" />
+    <ClInclude Include="GameLogic.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -201,7 +203,9 @@
   <ItemGroup>
     <ClCompile Include="ConnectPlayerMFC.cpp" />
     <ClCompile Include="ConnectPlayerMFCDlg.cpp" />
+    <ClCompile Include="GameControl.cpp" />
     <ClCompile Include="GameDig.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

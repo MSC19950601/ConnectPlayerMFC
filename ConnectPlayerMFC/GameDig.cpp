@@ -135,7 +135,10 @@ void CGameDig::InitElement() {
 
 void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	//初始化游戏地图
+	m_gameControl.StartGame();
+
+	/*// TODO: 在此添加控件通知处理程序代码
 	int anMap[4][4] = {
 		2,0,1,3,
 		2,2,1,3,
@@ -148,7 +151,7 @@ void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 		}
 	}
 
-	//UpdateMap();
+	//
 
 	int nLeft = 50;
 	int nTop = 50;
@@ -160,9 +163,9 @@ void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcMark, 0, m_anMap[i][j] * nElemH, SRCPAINT);
 			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, m_anMap[i][j] * nElemH, SRCAND);
 		}
-	}
-
-	Invalidate(FALSE);
+	}*/
+    UpdateMap();
+	InvalidateRect(m_rtGameRect,FALSE);
 }
 
 
@@ -219,9 +222,11 @@ void CGameDig::UpdateMap()
 	m_dcMem.BitBlt(m_rtGameRect.left, m_rtGameRect.top, m_rtGameRect.Width(), m_rtGameRect.Height(), &m_dcBG, m_rtGameRect.left, m_rtGameRect.top, SRCCOPY);
 	for (int i = 0; i < 4;i++) {
 		for (int j = 0;j < 4;j++) {
+			int nElemVal = m_gameControl.GetElement(i, j);
+			if (nElemVal == BLANK)	continue;
 			//m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, m_anMap[i][j] * nElemH, SRCCOPY);
-			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcMark, 0, m_anMap[i][j] * nElemH, SRCPAINT);
-			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, m_anMap[i][j] * nElemH, SRCAND);
+			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcMark, 0, nElemVal * nElemH, SRCPAINT);
+			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, nElemVal * nElemH, SRCAND);
 		}
 	}
 	//UpdateMap();
@@ -244,20 +249,24 @@ void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 	}
 	if (m_bFirstPoint) {
 		DrawTipFrame(nRow, nCol);
-		m_ptSelFirst.x = nCol;
-		m_ptSelFirst.y = nRow;
+		//m_ptSelFirst.col = nCol;
+		//m_ptSelFirst.row = nRow;
+		m_gameControl.SetFirstPoint(nRow, nCol);
 	}
 	else {
 		DrawTipFrame(nRow, nCol);
-		m_ptSelSec.x = nCol;
-		m_ptSelSec.y = nRow;
-         
+		//m_ptSelSec.x = nCol;
+		//m_ptSelSec.y = nRow;
+		m_gameControl.SetSecPoint(nRow, nCol);
+		Vertex avPath[2];
 		//判断是否是相同图片
-		if (IsLink()) {
+		if (/*IsLink()*/m_gameControl.Link(avPath)) {
 			//画提示线
-			DrawTipLine();
-			m_anMap[m_ptSelFirst.y][m_ptSelFirst.x] = -1;
-			m_anMap[m_ptSelSec.y][m_ptSelSec.x] = -1;
+			DrawTipLine(avPath);
+			//清除
+			//m_anMap[m_ptSelFirst.y][m_ptSelFirst.x] = -1;
+			//m_anMap[m_ptSelSec.y][m_ptSelSec.x] = -1;
+			
 			UpdateMap();
 		}
 		Sleep(200);
@@ -279,14 +288,15 @@ void CGameDig::DrawTipFrame(int nRow, int nCol) {
 	dc.FrameRect(rtTipFrame, &brush);
 }
 
-bool CGameDig::IsLink() {
+
+/*bool CGameDig::IsLink() {
 	if (m_anMap[m_ptSelFirst.y][m_ptSelFirst.x] == m_anMap[m_ptSelSec.y][m_ptSelSec.x]) {
 		return true;
 	}
 	return false;
-}
+}*/
 
-void CGameDig::DrawTipLine() {
+/*void CGameDig::DrawTipLine() {
 	CClientDC dc(this);
 	CPen penLine(PS_SOLID, 2, RGB(0, 255, 0));
 	CPen * pOldPen = dc.SelectObject(&penLine);
@@ -297,6 +307,21 @@ void CGameDig::DrawTipLine() {
 	dc.LineTo(
 		m_ptGameTop.x + m_ptSelSec.x + m_sizeElem.cx + m_sizeElem.cx / 2,
 		m_ptGameTop.y + m_ptSelSec.y + m_sizeElem.cy + m_sizeElem.cy / 2
+		);
+	dc.SelectObject(pOldPen);
+}*/
+
+void CGameDig::DrawTipLine(Vertex asvPath[2]) {
+	CClientDC dc(this);
+	CPen penLine(PS_SOLID, 2, RGB(0, 255, 0));
+	CPen * pOldPen = dc.SelectObject(&penLine);
+	dc.MoveTo(
+		m_ptGameTop.x + asvPath[0].col + m_sizeElem.cx + m_sizeElem.cx / 2,
+		m_ptGameTop.y + asvPath[0].row + m_sizeElem.cy + m_sizeElem.cy / 2
+		);
+	dc.LineTo(
+		m_ptGameTop.x + asvPath[1].col + m_sizeElem.cx + m_sizeElem.cx / 2,
+		m_ptGameTop.y + asvPath[1].row + m_sizeElem.cy + m_sizeElem.cy / 2
 		);
 	dc.SelectObject(pOldPen);
 }
