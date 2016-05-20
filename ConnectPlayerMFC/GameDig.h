@@ -22,11 +22,13 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
 	void DrawTipFrame(int nRow, int nCol);
 	//bool IsLink();
-	void DrawTipLine(Vertex asvPath[2]);
+	void DrawTipLine(Vertex asvPath[4], int nVexNum);
 	DECLARE_MESSAGE_MAP()
 
 	void InitElement();
 	void InitBackground();
+
+
 protected:
 
 	CDC m_dcMem;
@@ -34,18 +36,15 @@ protected:
 	CDC m_dcMark;
 	CDC m_dcBG;
 
-	//int m_anMap[4][4];
 	CPoint m_ptGameTop;
 	CSize m_sizeElem;
 	bool m_bFirstPoint;
-
 	CRect m_rtGameRect;
-
-	//CPoint m_ptSelFirst;
-	//CPoint m_ptSelSec;
 	Vertex m_ptSelFirst;
 	Vertex m_ptSelSec;
 	CGameControl m_gameControl;
+
+	bool m_bPlaying;
 public:
 	
 	virtual BOOL OnInitDialog();
