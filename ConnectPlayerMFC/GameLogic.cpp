@@ -37,11 +37,11 @@ bool GameLogic::IsExist(int nVi) {
 }
 
 void GameLogic::PushVertex(int nV) {
-	m_anPath[m_nVexNum++] = nV;
+	m_anPath[m_nVexNum] = nV;
+	m_nVexNum++;
 	if (IsCorner()) {
 		m_nCorner++;
 	}
-
 }
 
 void GameLogic::PopVertex() {
@@ -58,7 +58,7 @@ bool GameLogic::IsCorner() {
 	}
 	return false;
 }
-bool GameLogic::SearchPath(CGraph &graph, int nV0, int nV1) {
+bool GameLogic::SearchPath2(CGraph &graph, int nV0, int nV1) {
 	//得到顶点数
 	int nVexnum = graph.GetVexnum();
 
@@ -78,7 +78,7 @@ bool GameLogic::SearchPath(CGraph &graph, int nV0, int nV1) {
 					continue;
 				}
 				//如果nVi是一个已消除的点，则判断（nVi,nV1）是否连通
-				if (SearchPath(graph, nVi, nV1)) {
+				if (SearchPath2(graph, nVi, nV1)) {
 					return true;
 				}
 			}
@@ -95,13 +95,11 @@ bool GameLogic::IsLink(CGraph &graph, Vertex v1, Vertex v2) {
 	int nV1Index = v1.row * 4 + v1.col;
 	int nV2Index = v2.row * 4 + v2.col;
 
-	//AddVertex(v1);
 	PushVertex(nV1Index);
-	if (SearchPath(graph, nV1Index, nV2Index)) {
+	if (SearchPath2(graph, nV1Index, nV2Index)) {
 		return true;
 	}
 	PopVertex();
-	//DeleteVertex();
 
 	return false;
 }
@@ -162,21 +160,13 @@ void GameLogic::UpdateArc(CGraph &graph, int nRow, int nCol) {
 }
 
 
-/*void GameLogic::AddVertex(Vertex v) {
-	m_avPath[m_nVexNum] = v;
-	m_nVexNum++;
-}
-
-void GameLogic::DeleteVertex() {
-	m_nVexNum--;
-}*/
-
 int GameLogic::GetVexPath(Vertex avPath[16]) {
 	for (int i = 0; i < m_nVexNum; i++) {
 		Vertex v;
 		int nIndex = m_anPath[i];
 		v.row = nIndex / 4;
 		v.col = nIndex % 4;
+		v.info = nIndex;
 		avPath[i] = v;
 	}
 	return m_nVexNum;
@@ -192,4 +182,40 @@ bool GameLogic::IsBlank(CGraph &graph) {
 	return true;
 }
 
+bool GameLogic::IsOneLine(Vertex avPath[16], int n) {
+	if (avPath[0].row == avPath[n - 1].row || avPath[0].col == avPath[n - 1].col)
+		return true;
+	else
+		return false;
+}
+
+bool GameLogic::IsOneCorner(Vertex avPath[16], int n) {
+	Vertex begin = avPath[0];
+	Vertex end = avPath[n - 1];
+	for (int i = 1; i < n - 1; i++) {
+		if ((avPath[i].row == begin.row && avPath[i].col == end.col) || (avPath[i].col == begin.col && avPath[i].row == end.row)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool GameLogic::IsTwoCorner(Vertex avPath[16], int n) {
+	Vertex begin = avPath[0];
+	Vertex end = avPath[n - 1];
+	Vertex c1;
+	Vertex c2;
+	for (int i = 1; i < n - 1; i++) {
+		if (avPath[i].col == begin.col || avPath[i].row == begin.row) {
+			c1 = avPath[i];
+		}
+		if (avPath[i].col == end.col || avPath[i].row == end.row) {
+			c2 = avPath[i];
+		}
+	}
+	if ((c1.row == c2.row || c1.col == c2.col) && c1.info != -1 && c2.info != -1) {
+		return true;
+	}
+	return false;
+}
 

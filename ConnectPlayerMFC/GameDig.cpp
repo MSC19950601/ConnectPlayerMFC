@@ -238,20 +238,17 @@ void CGameDig::DrawTipLine(Vertex asvPath[4], int nVexNum) {
 	CPen penLine(PS_SOLID, 2, RGB(0, 255, 0));
 	CPen * pOldPen = dc.SelectObject(&penLine);
 	
-	for (int i = 0; i < nVexNum; i++) {
-		int k = 0;
-		k =  asvPath[i].row + 233;
-	}
 	dc.MoveTo(
 		m_ptGameTop.x + asvPath[0].col * m_sizeElem.cx + m_sizeElem.cx / 2,
 		m_ptGameTop.y + asvPath[0].row * m_sizeElem.cy + m_sizeElem.cy / 2
 	);
 	for (int i = 1; i < nVexNum; i++) {
+
 		dc.LineTo(
 			m_ptGameTop.x + asvPath[i].col * m_sizeElem.cx + m_sizeElem.cx / 2,
 			m_ptGameTop.y + asvPath[i].row * m_sizeElem.cy + m_sizeElem.cy / 2
 			);
-		//dc.SelectObject(pOldPen);
+		
 	}
 	dc.SelectObject(pOldPen);
 }
