@@ -24,11 +24,13 @@ int CGameControl::GetElement(int nRow, int nCol) {
 void CGameControl::SetFirstPoint(int nRow, int nCol) {
 	m_ptSelFirst.row = nRow;
 	m_ptSelFirst.col = nCol;
+	m_ptSelFirst.info = 4 * nRow + nCol;
 }
 
 void CGameControl::SetSecPoint(int nRow, int nCol) {
 	m_ptSelSec.row = nRow;
 	m_ptSelSec.col = nCol;
+	m_ptSelSec.info = 4 * nRow + nCol;
 }
 
 bool CGameControl::Link(Vertex avPath[16], int &nVexNum) {
@@ -39,6 +41,9 @@ bool CGameControl::Link(Vertex avPath[16], int &nVexNum) {
 
 	int nInfo1 = m_graph.GetVertex(m_ptSelFirst.row * 4 + m_ptSelFirst.col);
 	int nInfo2 = m_graph.GetVertex(m_ptSelSec.row * 4 + m_ptSelSec.col);
+
+	int info1 = m_ptSelFirst.row * 4 + m_ptSelFirst.col;
+	int info2 = m_ptSelSec.row * 4 + m_ptSelSec.col;
 	if (nInfo1 != nInfo2 || nInfo1 == BLANK || nInfo2 == BLANK) {
 		return false;
 	}
@@ -51,7 +56,15 @@ bool CGameControl::Link(Vertex avPath[16], int &nVexNum) {
 		//avPath[0] = m_ptSelFirst;
 		//avPath[nVexNum] = m_ptSelSec;//临时成功
 		nVexNum = gameLogic.GetVexPath(avPath);
-		if (gameLogic.IsOneLine(avPath, nVexNum)) {
+
+		//对生成的路径尽心预判
+		/*if (gameLogic.IsMoreTwoCorner(avPath)) {
+			return false;
+		}*/
+
+		//对搜索路径进行修正
+		gameLogic.correctPath(avPath,info1,info2);
+		if (gameLogic.IsNoCorner(avPath, nVexNum)) {
 			avPath[0] = m_ptSelFirst;
 			avPath[1] = m_ptSelSec;
 			nVexNum = 2;
@@ -95,6 +108,7 @@ bool CGameControl::Link(Vertex avPath[16], int &nVexNum) {
 				return true;
 			}
 		}
+
 		return true;
 	}
 	return false;
@@ -104,6 +118,20 @@ bool CGameControl::IsWin() {
 	GameLogic logic;
 	if (logic.IsBlank(m_graph)) {
 		m_graph.ClearGraph();
+		return true;
+	}
+	return false;
+}
+
+bool CGameControl::Help(Vertex avPath[16], int &nVexnum) {
+	GameLogic gameLogic;
+	//判断是否为空
+	if (gameLogic.IsBlank(m_graph))
+		return false;
+	//查找一个有效的提示路径
+	if (gameLogic.SearchValidPath(m_graph)) {
+		//返回路径顶点
+		nVexnum = gameLogic.GetVexPath(avPath);
 		return true;
 	}
 	return false;

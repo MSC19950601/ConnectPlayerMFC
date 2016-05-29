@@ -61,7 +61,7 @@ END_MESSAGE_MAP()
 void CGameDig::InitBackground()
 {
 	CClientDC dc(this);
-	HANDLE hBmpBG = ::LoadImageW(NULL, _T("theme\\pic\\background_2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE hBmpBG = ::LoadImageW(NULL, _T("theme\\pic\\newBackground2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	m_dcBG.CreateCompatibleDC(&dc);
 	m_dcBG.SelectObject(hBmpBG);
 
@@ -98,13 +98,13 @@ void CGameDig::OnPaint()
 
 void CGameDig::InitElement() {
 	CClientDC dc(this);
-	HANDLE bmp = ::LoadImage(NULL, _T("theme\\cellPic\\cell1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE bmp = ::LoadImage(NULL, _T("theme\\cellPic\\newCellCollection1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     m_dcElement.CreateCompatibleDC(&dc);
 	m_dcElement.SelectObject(bmp);
 
-	HANDLE bmpMark = ::LoadImage(NULL, _T("theme\\cellPic\\cell2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-	m_dcMark.CreateCompatibleDC(&dc);
-	m_dcMark.SelectObject(bmpMark);
+	//HANDLE bmpMark = ::LoadImage(NULL, _T("theme\\cellPic\\animal_mask.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	//m_dcMark.CreateCompatibleDC(&dc);
+	//m_dcMark.SelectObject(bmpMark);
 }
 
 
@@ -113,7 +113,7 @@ void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 	//初始化游戏地图
 	m_gameControl.StartGame();
 	m_bPlaying = true;
-	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME);
+	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(FALSE);
 	
     UpdateMap();
 	InvalidateRect(m_rtGameRect,FALSE);
@@ -122,7 +122,20 @@ void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 
 void CGameDig::OnBnClickedButtonBasicModelPrompt()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	if (!m_bPlaying)	return;
+	//连子判断
+	Vertex avPath[16];
+	int nVexNum = 0;
+	if (m_gameControl.Help(avPath, nVexNum)) {
+		m_ptSelFirst = avPath[0];
+		m_ptSelSec = avPath[nVexNum - 1];
+		DrawTipFrame(m_ptSelFirst.row, m_ptSelFirst.col);
+		DrawTipFrame(m_ptSelSec.row, m_ptSelSec.col);
+		DrawTipLine(avPath, nVexNum);
+		UpdateMap();
+		Sleep(200);
+		InvalidateRect(m_rtGameRect, FALSE);
+	}
 }
 
 
@@ -173,9 +186,12 @@ void CGameDig::UpdateMap()
 	for (int i = 0; i < 4;i++) {
 		for (int j = 0;j < 4;j++) {
 			int nElemVal = m_gameControl.GetElement(i, j);
-			if (nElemVal == BLANK)	continue;
-			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcMark, 0, nElemVal * nElemH, SRCPAINT);
-			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, nElemVal * nElemH, SRCAND);
+			if (nElemVal == BLANK) {
+				continue;
+			}
+			//m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcMark, 0, nElemVal * nElemH, SRCPAINT);
+			//m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, nElemVal * nElemH, SRCAND);
+			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, nElemVal * nElemH, SRCCOPY);
 		}
 	}
 	Invalidate(FALSE);
@@ -248,7 +264,6 @@ void CGameDig::DrawTipLine(Vertex asvPath[4], int nVexNum) {
 			m_ptGameTop.x + asvPath[i].col * m_sizeElem.cx + m_sizeElem.cx / 2,
 			m_ptGameTop.y + asvPath[i].row * m_sizeElem.cy + m_sizeElem.cy / 2
 			);
-		
 	}
 	dc.SelectObject(pOldPen);
 }

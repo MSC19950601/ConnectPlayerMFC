@@ -15,6 +15,7 @@ public:
 	void SetSecPoint(int nRow, int nCol);
 	bool Link(Vertex avPath[16], int &nVexNum);
 	bool IsWin();
+	bool Help(Vertex avPath[16], int &nVexnum);
 private:
 
 

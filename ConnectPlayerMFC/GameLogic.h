@@ -20,7 +20,11 @@ public:
 	bool IsCorner();
 	bool IsBlank(CGraph &graph);
 
-	bool IsOneLine(Vertex avPath[16],int n);
+	bool IsMoreTwoCorner(Vertex avPath[16]);
+
+	void correctPath(Vertex avPath[16], int info1, int info2);
+
+	bool IsNoCorner(Vertex avPath[16],int n);
 
 	bool IsOneCorner(Vertex avPath[16], int n);
 
@@ -28,9 +32,10 @@ public:
 
 
 protected:
-
-	int m_anPath[16];
+	int m_anPath[16] = { -1 };
 	int m_nVexNum;
 	int m_nCorner;
+public:
+	bool SearchValidPath(CGraph& graph);
 };
 
