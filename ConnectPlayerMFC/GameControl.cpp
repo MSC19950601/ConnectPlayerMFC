@@ -18,32 +18,32 @@ void CGameControl::StartGame() {
 }
 
 int CGameControl::GetElement(int nRow, int nCol) {
-	return m_graph.GetVertex(nRow * 4 + nCol);
+	return m_graph.GetVertex(nRow * MAX_PIC_NUM + nCol);
 }
 
 void CGameControl::SetFirstPoint(int nRow, int nCol) {
 	m_ptSelFirst.row = nRow;
 	m_ptSelFirst.col = nCol;
-	m_ptSelFirst.info = 4 * nRow + nCol;
+	m_ptSelFirst.info = MAX_PIC_NUM * nRow + nCol;
 }
 
 void CGameControl::SetSecPoint(int nRow, int nCol) {
 	m_ptSelSec.row = nRow;
 	m_ptSelSec.col = nCol;
-	m_ptSelSec.info = 4 * nRow + nCol;
+	m_ptSelSec.info = MAX_PIC_NUM * nRow + nCol;
 }
 
-bool CGameControl::Link(Vertex avPath[16], int &nVexNum) {
+bool CGameControl::Link(Vertex avPath[MAX_VERTEX_NUM], int &nVexNum) {
 	//m_ptSelSec,m_ptFirstSec是否连通
 	if (m_ptSelFirst.row == m_ptSelSec.row && m_ptSelFirst.col == m_ptSelSec.col) {
 		return false;
 	}
 
-	int nInfo1 = m_graph.GetVertex(m_ptSelFirst.row * 4 + m_ptSelFirst.col);
-	int nInfo2 = m_graph.GetVertex(m_ptSelSec.row * 4 + m_ptSelSec.col);
+	int nInfo1 = m_graph.GetVertex(m_ptSelFirst.row * MAX_PIC_NUM + m_ptSelFirst.col);
+	int nInfo2 = m_graph.GetVertex(m_ptSelSec.row * MAX_PIC_NUM + m_ptSelSec.col);
 
-	int info1 = m_ptSelFirst.row * 4 + m_ptSelFirst.col;
-	int info2 = m_ptSelSec.row * 4 + m_ptSelSec.col;
+	int info1 = m_ptSelFirst.row * MAX_PIC_NUM + m_ptSelFirst.col;
+	int info2 = m_ptSelSec.row * MAX_PIC_NUM + m_ptSelSec.col;
 	if (nInfo1 != nInfo2 || nInfo1 == BLANK || nInfo2 == BLANK) {
 		return false;
 	}
@@ -52,7 +52,7 @@ bool CGameControl::Link(Vertex avPath[16], int &nVexNum) {
 	if (gameLogic.IsLink(m_graph, m_ptSelFirst, m_ptSelSec)) {
 		//nVexNum = gameLogic.GetVexPath(avPath);
 		gameLogic.Clear(m_graph, m_ptSelFirst, m_ptSelSec);
-		m_test.output(m_graph);
+		//m_test.output(m_graph);
 		//avPath[0] = m_ptSelFirst;
 		//avPath[nVexNum] = m_ptSelSec;//临时成功
 		nVexNum = gameLogic.GetVexPath(avPath);
@@ -63,7 +63,7 @@ bool CGameControl::Link(Vertex avPath[16], int &nVexNum) {
 		}*/
 
 		//对搜索路径进行修正
-		gameLogic.correctPath(avPath,info1,info2);
+		/*gameLogic.correctPath(avPath,info1,info2);
 		if (gameLogic.IsNoCorner(avPath, nVexNum)) {
 			avPath[0] = m_ptSelFirst;
 			avPath[1] = m_ptSelSec;
@@ -107,7 +107,7 @@ bool CGameControl::Link(Vertex avPath[16], int &nVexNum) {
 				nVexNum = 4;
 				return true;
 			}
-		}
+		}*/
 
 		return true;
 	}
@@ -123,7 +123,7 @@ bool CGameControl::IsWin() {
 	return false;
 }
 
-bool CGameControl::Help(Vertex avPath[16], int &nVexnum) {
+bool CGameControl::Help(Vertex avPath[MAX_VERTEX_NUM], int &nVexnum) {
 	GameLogic gameLogic;
 	//判断是否为空
 	if (gameLogic.IsBlank(m_graph))
@@ -135,4 +135,11 @@ bool CGameControl::Help(Vertex avPath[16], int &nVexnum) {
 		return true;
 	}
 	return false;
+}
+
+
+void CGameControl::ResetGraph()
+{
+	GameLogic gameLogic;
+	gameLogic.ResetGraph(m_graph);
 }

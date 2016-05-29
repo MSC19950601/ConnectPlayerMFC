@@ -22,7 +22,7 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
 	void DrawTipFrame(int nRow, int nCol);
 	//bool IsLink();
-	void DrawTipLine(Vertex asvPath[4], int nVexNum);
+	void DrawTipLine(Vertex asvPath[MAX_VERTEX_NUM], int nVexNum);
 	DECLARE_MESSAGE_MAP()
 
 	void InitElement();

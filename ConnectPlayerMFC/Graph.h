@@ -1,5 +1,7 @@
 #pragma once
-
+#include "global.h"
+typedef int Vertices[MAX_VERTEX_NUM];
+typedef bool AdjMatrix[MAX_VERTEX_NUM][MAX_VERTEX_NUM];
 //图数据结构
 class CGraph
 {
@@ -7,9 +9,6 @@ public:
 	CGraph();
 	~CGraph();
 
-#define MAX_VEXTEX_NUM 16
-	typedef int Vertices[MAX_VEXTEX_NUM];
-	typedef bool AdjMatrix[MAX_VEXTEX_NUM][MAX_VEXTEX_NUM];
 protected:
 	Vertices m_Vertices;
 	AdjMatrix m_AdjMatrix;

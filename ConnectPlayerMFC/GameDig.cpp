@@ -15,18 +15,18 @@ IMPLEMENT_DYNAMIC(CGameDig, CDialogEx)
 CGameDig::CGameDig(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_DIALOG_GAME_BASIC, pParent)
 {
-	m_ptGameTop.x = 50;
-	m_ptGameTop.y = 50;
+	m_ptGameTop.x = MAP_LEFT;
+	m_ptGameTop.y = MAP_TOP;
 
 	//单个元素图片大小的设置
-	m_sizeElem.cx = 40;
-	m_sizeElem.cy = 40;
+	m_sizeElem.cx = PIC_WIDTH;
+	m_sizeElem.cy = PIC_HEIGHT;
 
 	//初始化游戏更新区域
 	m_rtGameRect.top = m_ptGameTop.y;
 	m_rtGameRect.left = m_ptGameTop.x;
-	m_rtGameRect.right = m_rtGameRect.left + m_sizeElem.cx * 4;
-	m_rtGameRect.bottom = m_rtGameRect.top + m_sizeElem.cy * 4;
+	m_rtGameRect.right = m_rtGameRect.left + m_sizeElem.cx * MAX_COL;
+	m_rtGameRect.bottom = m_rtGameRect.top + m_sizeElem.cy * MAX_ROW;
 	//初始点的标识
 	m_bFirstPoint = true;
 
@@ -61,15 +61,15 @@ END_MESSAGE_MAP()
 void CGameDig::InitBackground()
 {
 	CClientDC dc(this);
-	HANDLE hBmpBG = ::LoadImageW(NULL, _T("theme\\pic\\newBackground2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE hBmpBG = ::LoadImageW(NULL, _T("theme\\pic\\newBackground3.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	m_dcBG.CreateCompatibleDC(&dc);
 	m_dcBG.SelectObject(hBmpBG);
 
 	m_dcMem.CreateCompatibleDC(&dc);
 	CBitmap bmpMem;
-	bmpMem.CreateCompatibleBitmap(&dc, 800, 600);
+	bmpMem.CreateCompatibleBitmap(&dc, 900, 600);
 	m_dcMem.SelectObject(&bmpMem);
-	m_dcMem.BitBlt(0, 0, 800, 600, &m_dcBG, 0, 0, SRCCOPY);
+	m_dcMem.BitBlt(0, 0, 900, 600, &m_dcBG, 0, 0, SRCCOPY);
 }
 
 
@@ -92,13 +92,13 @@ void CGameDig::OnPaint()
 	CPaintDC dc(this); // device context for painting
 					   // TODO: 在此处添加消息处理程序代码
 					   // 不为绘图消息调用 CDialogEx::OnPaint()
-	dc.BitBlt(0, 0, 800, 600, &m_dcMem, 0, 0, SRCCOPY);
+	dc.BitBlt(0, 0, 900, 600, &m_dcMem, 0, 0, SRCCOPY);
 
 }
 
 void CGameDig::InitElement() {
 	CClientDC dc(this);
-	HANDLE bmp = ::LoadImage(NULL, _T("theme\\cellPic\\newCellCollection1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE bmp = ::LoadImage(NULL, _T("theme\\cellPic\\newCellCollection2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     m_dcElement.CreateCompatibleDC(&dc);
 	m_dcElement.SelectObject(bmp);
 
@@ -124,7 +124,7 @@ void CGameDig::OnBnClickedButtonBasicModelPrompt()
 {
 	if (!m_bPlaying)	return;
 	//连子判断
-	Vertex avPath[16];
+	Vertex avPath[MAX_VERTEX_NUM];
 	int nVexNum = 0;
 	if (m_gameControl.Help(avPath, nVexNum)) {
 		m_ptSelFirst = avPath[0];
@@ -147,7 +147,15 @@ void CGameDig::OnBnClickedButtonBasicModelSuspendGame()
 
 void CGameDig::OnBnClickedButtonBasicModelRearangement()
 {
-	// TODO: 在此添加控件通知处理程序代码
+
+	if (!m_bPlaying)
+		return;
+	//重排，调用CGameControl::ResetGraph
+	m_gameControl.ResetGraph();
+	//更新地图
+	UpdateMap();
+	//重绘界面
+	InvalidateRect(m_rtGameRect, FALSE);
 }
 
 
@@ -171,7 +179,7 @@ void CGameDig::UpdateWindow()
 	this->GetClientRect(rtClient);
 	int nSpanWidth = rtWin.Width() - rtClient.Width();
 	int nSpanHeight = rtWin.Height() - rtClient.Height();
-	MoveWindow(0, 0, 800 + nSpanWidth, 600 + nSpanHeight);
+	MoveWindow(0, 0,900 + nSpanWidth, 600 + nSpanHeight);
 	CenterWindow();
 }
 
@@ -183,8 +191,8 @@ void CGameDig::UpdateMap()
 	int nElemH = m_sizeElem.cy;
 
 	m_dcMem.BitBlt(m_rtGameRect.left, m_rtGameRect.top, m_rtGameRect.Width(), m_rtGameRect.Height(), &m_dcBG, m_rtGameRect.left, m_rtGameRect.top, SRCCOPY);
-	for (int i = 0; i < 4;i++) {
-		for (int j = 0;j < 4;j++) {
+	for (int i = 0; i < MAX_ROW;i++) {
+		for (int j = 0;j < MAX_COL;j++) {
 			int nElemVal = m_gameControl.GetElement(i, j);
 			if (nElemVal == BLANK) {
 				continue;
@@ -207,7 +215,7 @@ void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 	int nRow = (point.y - m_ptGameTop.y) / m_sizeElem.cy;
 	int nCol = (point.x - m_ptGameTop.x) / m_sizeElem.cx;
 
-	if (nRow > 3/*3*/ || nCol > 3/*3*/) {
+	if (nRow > MAX_ROW - 1/*3*/ || nCol > MAX_COL - 1/*3*/) {
 		return CDialog::OnLButtonUp(nFlags, point);
 	}
 	if (m_bFirstPoint) {
@@ -217,7 +225,7 @@ void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 	else {
 		DrawTipFrame(nRow, nCol);
 		m_gameControl.SetSecPoint(nRow, nCol);
-		Vertex avPath[16];
+		Vertex avPath[MAX_VERTEX_NUM];
 		int nVexNum = 0;
 		//判断是否是相同图片
 		if (m_gameControl.Link(avPath, nVexNum)) {
@@ -249,7 +257,7 @@ void CGameDig::DrawTipFrame(int nRow, int nCol) {
 }
 
 
-void CGameDig::DrawTipLine(Vertex asvPath[4], int nVexNum) {
+void CGameDig::DrawTipLine(Vertex asvPath[MAX_VERTEX_NUM], int nVexNum) {
 	CClientDC dc(this);
 	CPen penLine(PS_SOLID, 2, RGB(0, 255, 0));
 	CPen * pOldPen = dc.SelectObject(&penLine);

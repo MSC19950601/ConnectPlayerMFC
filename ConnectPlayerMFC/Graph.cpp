@@ -14,13 +14,13 @@ CGraph::~CGraph()
 
 void CGraph::InitGraph() {
 	//初始化顶点
-	for (int i = 0; i < MAX_VEXTEX_NUM; i++){
+	for (int i = 0; i < MAX_VERTEX_NUM; i++){
 		m_Vertices[i] = -1;
 	}
 	//初始化边
-	for (int i = 0; i < MAX_VEXTEX_NUM; i++) {
+	for (int i = 0; i < MAX_VERTEX_NUM; i++) {
 		//
-		for (int j = 0; j < MAX_VEXTEX_NUM; j++) {
+		for (int j = 0; j < MAX_VERTEX_NUM; j++) {
 			//
 			m_AdjMatrix[i][j] = false;
 		}
@@ -29,7 +29,7 @@ void CGraph::InitGraph() {
 
 
 int CGraph::AddVertex(int nInfo){
-	if (m_nVexnum >= MAX_VEXTEX_NUM) {
+	if (m_nVexnum >= MAX_VERTEX_NUM) {
 		return m_nVexnum;
 	}
 	m_Vertices[m_nVexnum++] = nInfo;

@@ -26,8 +26,8 @@ void CTest::output(CGraph &graph) {
 	strTmp.Format(_T("\n"));
 	file.WriteString(strTmp);
 	//Êä³ö¹ØÏµ¾ØÕó
-	for (int i = 0; i < MAX_VEXTEX_NUM; i++) {
-		for (int j = 0; j < MAX_VEXTEX_NUM; j++) {
+	for (int i = 0; i < MAX_VERTEX_NUM; i++) {
+		for (int j = 0; j < MAX_VERTEX_NUM; j++) {
 			strTmp.Format(_T("%d\t"), graph.GetAdiMatrix(i, j));
 			file.WriteString(strTmp);
 		}

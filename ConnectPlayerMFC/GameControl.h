@@ -13,17 +13,17 @@ public:
 	int GetElement(int nRow, int nCol);
 	void SetFirstPoint(int nRow, int nCol);
 	void SetSecPoint(int nRow, int nCol);
-	bool Link(Vertex avPath[16], int &nVexNum);
+	bool Link(Vertex avPath[MAX_VERTEX_NUM], int &nVexNum);
 	bool IsWin();
-	bool Help(Vertex avPath[16], int &nVexnum);
+	bool Help(Vertex avPath[MAX_VERTEX_NUM], int &nVexnum);
 private:
 
-
-	int m_anMap[4][4];//初始游戏地图为4行4列
 	CGraph m_graph;//图
 	Vertex m_ptSelFirst;//选中的第一个点
 	Vertex m_ptSelSec;//选中的第二个点
 
 	CTest m_test;
+public:
+	void ResetGraph();
 };
 

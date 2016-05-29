@@ -6,9 +6,9 @@ GameLogic::GameLogic()
 {
 	m_nVexNum = 0;
 	m_nCorner = 0;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			m_anPath[4 * i + j] = -1;
+	for (int i = 0; i <  MAX_ROW; i++) {
+		for (int j = 0; j < MAX_COL; j++) {
+			m_anPath[MAX_PIC_NUM * i + j] = -1;
 		}
 	}
 }
@@ -32,7 +32,7 @@ void GameLogic::InitMap(CGraph &graph) {
 		}
 	}*/
 
-	int anTemp[16];
+	/*int anTemp[16];
 	//
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -41,18 +41,20 @@ void GameLogic::InitMap(CGraph &graph) {
 	}
 	srand((int)time(NULL));
 
+
+
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			graph.AddVertex(anTemp[i * 4 + j]);
 			UpdateArc(graph, i, j);
 		}
-	}
+	}*/
 	//////////////////////////////////////////////////////////////////////////
 	//160的情况
-	/*int anTemp[MAX_VERTEX_NUM];
-	for (int i = 0; i < MAX_PIC_NUM; i++) {
+	int anTemp[MAX_VERTEX_NUM];
+	for (int i = 0; i < REPEAT_NUM; i++) {
 		for (int j = 0; j < MAX_PIC_NUM; j++) {
-			anTemp[i * REPEAT_NUM + j] = i;
+			anTemp[i * MAX_PIC_NUM + j] = j;
 		}
 	}
 	srand((int)time(NULL));
@@ -64,7 +66,13 @@ void GameLogic::InitMap(CGraph &graph) {
 		int nTemp = anTemp[nIndex1];
 		anTemp[nIndex1] = anTemp[nIndex2];
 		anTemp[nIndex2] = nTemp;
-	}*/
+	}
+	for (int i = 0; i < MAX_ROW; i++) {
+		for (int j = 0; j <  MAX_COL; j++) {
+			graph.AddVertex(anTemp[i * MAX_PIC_NUM + j]);
+			UpdateArc(graph, i, j);
+		}
+	}
 	
 }
 
@@ -134,8 +142,8 @@ bool GameLogic::SearchPath2(CGraph &graph, int nV0, int nV1) {
 }
 
 bool GameLogic::IsLink(CGraph &graph, Vertex v1, Vertex v2) {
-	int nV1Index = v1.row * 4 + v1.col;
-	int nV2Index = v2.row * 4 + v2.col;
+	int nV1Index = v1.row * MAX_PIC_NUM + v1.col;
+	int nV2Index = v2.row * MAX_PIC_NUM + v2.col;
 
 	PushVertex(nV1Index);
 	if (SearchPath2(graph, nV1Index, nV2Index)) {
@@ -148,8 +156,8 @@ bool GameLogic::IsLink(CGraph &graph, Vertex v1, Vertex v2) {
 }
 
 void GameLogic::Clear(CGraph &graph, Vertex v1, Vertex v2) {
-	int nV1Index = v1.row * 4 + v1.col;
-	int nV2Index = v2.row * 4 + v2.col;
+	int nV1Index = v1.row * MAX_PIC_NUM + v1.col;
+	int nV2Index = v2.row * MAX_PIC_NUM + v2.col;
 
 	graph.UpdateVertex(nV1Index, BLANK);
 	graph.UpdateVertex(nV2Index, BLANK);
@@ -160,7 +168,7 @@ void GameLogic::Clear(CGraph &graph, Vertex v1, Vertex v2) {
 }
 
 void GameLogic::UpdateArc(CGraph &graph, int nRow, int nCol) {
-	int nV1Index = nRow * 4 + nCol;
+	int nV1Index = nRow * MAX_PIC_NUM + nCol;
 	if (nCol > 0) {
 		int nV2Index = nV1Index - 1;
 		int nInfo1 = graph.GetVertex(nV1Index);
@@ -171,7 +179,7 @@ void GameLogic::UpdateArc(CGraph &graph, int nRow, int nCol) {
 		}
 	}
 
-	if (nCol < 3) {
+	if (nCol < MAX_COL - 1) {
 		int nV2Index = nV1Index + 1;
 		//TODO：判断与右边相邻的是否有关系
 		int nInfo1 = graph.GetVertex(nV1Index);
@@ -182,7 +190,7 @@ void GameLogic::UpdateArc(CGraph &graph, int nRow, int nCol) {
 	}
 
 	if (nRow > 0) {
-		int nV2Index = nV1Index - 4;
+		int nV2Index = nV1Index - MAX_PIC_NUM;
 		//TODO：判断与正上方是否有关系
 		int nInfo1 = graph.GetVertex(nV1Index);
 		int nInfo2 = graph.GetVertex(nV2Index);
@@ -191,8 +199,8 @@ void GameLogic::UpdateArc(CGraph &graph, int nRow, int nCol) {
 		}
 	}
 
-	if (nRow < 3) {
-		int nV2Index = nV1Index + 4;
+	if (nRow < MAX_ROW - 1) {
+		int nV2Index = nV1Index + MAX_PIC_NUM;
 		//TODO：判断与正下方是否有关系
 		int nInfo1 = graph.GetVertex(nV1Index);
 		int nInfo2 = graph.GetVertex(nV2Index);
@@ -203,12 +211,12 @@ void GameLogic::UpdateArc(CGraph &graph, int nRow, int nCol) {
 }
 
 
-int GameLogic::GetVexPath(Vertex avPath[16]) {
+int GameLogic::GetVexPath(Vertex avPath[MAX_VERTEX_NUM]) {
 	for (int i = 0; i < m_nVexNum; i++) {
 		Vertex v;
 		int nIndex = m_anPath[i];
-		v.row = nIndex / 4;
-		v.col = nIndex % 4;
+		v.row = nIndex / MAX_PIC_NUM;
+		v.col = nIndex % MAX_PIC_NUM;
 		v.info = nIndex;
 		avPath[i] = v;
 	}
@@ -225,7 +233,7 @@ bool GameLogic::IsBlank(CGraph &graph) {
 	return true;
 }
 
-bool GameLogic::IsMoreTwoCorner(Vertex avPath[16]) {
+bool GameLogic::IsMoreTwoCorner(Vertex avPath[MAX_VERTEX_NUM]) {
 	if (m_nVexNum < 3) {
 		return false;
 	}
@@ -242,7 +250,7 @@ bool GameLogic::IsMoreTwoCorner(Vertex avPath[16]) {
 	}
 }
 
-void GameLogic::correctPath(Vertex avPath[16], int info1, int info2) {
+void GameLogic::correctPath(Vertex avPath[MAX_VERTEX_NUM], int info1, int info2) {
 
 	if (info1 == 0)
 		return;
@@ -271,7 +279,7 @@ void GameLogic::correctPath(Vertex avPath[16], int info1, int info2) {
 		return;
 
 	//修正
-	for (int i = end + 1; i < 16; i++) {
+	for (int i = end + 1; i < MAX_VERTEX_NUM; i++) {
 		avPath[i].row = -1;
 		avPath[i].col = -1;
 		avPath[i].info = -1;
@@ -281,7 +289,7 @@ void GameLogic::correctPath(Vertex avPath[16], int info1, int info2) {
 	}
 }
 
-bool GameLogic::IsNoCorner(Vertex avPath[16], int n) {
+bool GameLogic::IsNoCorner(Vertex avPath[MAX_VERTEX_NUM], int n) {
 	/*if (avPath[0].row == avPath[n - 1].row || avPath[0].col == avPath[n - 1].col)
 		return true;
 	else
@@ -305,7 +313,7 @@ bool GameLogic::IsNoCorner(Vertex avPath[16], int n) {
 	}
 
 	if (avPath[0].col == avPath[n - 1].col) {
-		if (abs(avPath[0].info - avPath[n - 1].info) % 4 == 0) {
+		if (abs(avPath[0].info - avPath[n - 1].info) % MAX_PIC_NUM == 0) {
 			return true;
 		}
 		int rowDivition = 0;
@@ -324,7 +332,7 @@ bool GameLogic::IsNoCorner(Vertex avPath[16], int n) {
 	return false;
 }
 
-bool GameLogic::IsOneCorner(Vertex avPath[16], int n) {
+bool GameLogic::IsOneCorner(Vertex avPath[MAX_VERTEX_NUM], int n) {
 	Vertex begin = avPath[0];
 	Vertex end = avPath[n - 1];
 	for (int i = 1; i < n - 1; i++) {
@@ -335,7 +343,7 @@ bool GameLogic::IsOneCorner(Vertex avPath[16], int n) {
 	return false;
 }
 
-bool GameLogic::IsTwoCorner(Vertex avPath[16], int n) {
+bool GameLogic::IsTwoCorner(Vertex avPath[MAX_VERTEX_NUM], int n) {
 	Vertex begin = avPath[0];
 	Vertex end = avPath[n - 1];
 	Vertex c1;
@@ -381,4 +389,27 @@ bool GameLogic::SearchValidPath(CGraph& graph)
 		}
 	}
 	return false;
+}
+
+//需修改
+
+void GameLogic::ResetGraph(CGraph& graph)
+{
+	//随机交换顶点数组中两个顶点的值
+	srand((int)time(NULL));
+	for (int i = 0; i < MAX_VERTEX_NUM; i++) {
+		int nIndex1 = rand() % MAX_VERTEX_NUM;
+		int nIndex2 = rand() % MAX_VERTEX_NUM;
+
+		int nTemp = m_anPath[nIndex1];
+		m_anPath[nIndex1] = m_anPath[nIndex2];
+		m_anPath[nIndex2] = nTemp;
+	}
+
+	for (int i = 0; i < MAX_ROW; i++) {
+		for (int j = 0; j < MAX_COL; j++) {
+			UpdateArc(graph, i, j);
+		}
+	}
+
 }
