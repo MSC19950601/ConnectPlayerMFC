@@ -25,6 +25,8 @@ void CGraph::InitGraph() {
 			m_AdjMatrix[i][j] = false;
 		}
 	}
+	m_nVexnum = 0;
+	m_nArcnum = 0;
 }
 
 
@@ -64,4 +66,10 @@ void CGraph::UpdateVertex(int nIndex, int info) {
 
 void CGraph::ClearGraph() {
 	InitGraph();
+}
+
+void CGraph::changeInfo(int info1, int info2) {
+	int temp = m_Vertices[info1];
+	m_Vertices[info1] = m_Vertices[info2];
+	m_Vertices[info2] = temp;
 }

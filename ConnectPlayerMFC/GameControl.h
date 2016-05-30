@@ -14,7 +14,7 @@ public:
 	void SetFirstPoint(int nRow, int nCol);
 	void SetSecPoint(int nRow, int nCol);
 	bool Link(Vertex avPath[MAX_VERTEX_NUM], int &nVexNum);
-	bool IsWin();
+	int IsWin(int nTime);
 	bool Help(Vertex avPath[MAX_VERTEX_NUM], int &nVexnum);
 private:
 

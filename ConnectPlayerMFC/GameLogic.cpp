@@ -401,9 +401,7 @@ void GameLogic::ResetGraph(CGraph& graph)
 		int nIndex1 = rand() % MAX_VERTEX_NUM;
 		int nIndex2 = rand() % MAX_VERTEX_NUM;
 
-		int nTemp = m_anPath[nIndex1];
-		m_anPath[nIndex1] = m_anPath[nIndex2];
-		m_anPath[nIndex2] = nTemp;
+		graph.changeInfo(nIndex1, nIndex2);
 	}
 
 	for (int i = 0; i < MAX_ROW; i++) {

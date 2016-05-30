@@ -2,6 +2,7 @@
 
 #include "global.h"
 #include "GameControl.h"
+#include "afxcmn.h"
 
 // CGameDig ¶Ô»°¿ò
 
@@ -36,6 +37,9 @@ protected:
 	CDC m_dcMark;
 	CDC m_dcBG;
 
+	CDC m_dcPause;
+	CDC m_dcCache;
+
 	CPoint m_ptGameTop;
 	CSize m_sizeElem;
 	bool m_bFirstPoint;
@@ -45,6 +49,8 @@ protected:
 	CGameControl m_gameControl;
 
 	bool m_bPlaying;
+
+	bool m_bPause;
 public:
 	
 	virtual BOOL OnInitDialog();
@@ -58,4 +64,9 @@ public:
 	void UpdateWindow();
 	void UpdateMap();
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	CProgressCtrl m_GameProgress;
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+
+	void DrawGameTime();
+	void JudgeWin();
 };

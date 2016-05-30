@@ -25,5 +25,6 @@ public:
 	bool GetArc(int nV1Index, int nV2Index);
 	void UpdateVertex(int nIndex, int info);
 	void ClearGraph();
+	void changeInfo(int info1, int info2);
 };
 

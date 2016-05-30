@@ -5,7 +5,6 @@
 #include "ConnectPlayerMFC.h"
 #include "GameDig.h"
 #include "afxdialogex.h"
-#include <iostream>
 
 
 // CGameDig 对话框
@@ -31,6 +30,8 @@ CGameDig::CGameDig(CWnd* pParent /*=NULL*/)
 	m_bFirstPoint = true;
 
 	m_bPlaying = false;
+
+	m_bPause = false;
 }
 
 CGameDig::~CGameDig()
@@ -40,6 +41,7 @@ CGameDig::~CGameDig()
 void CGameDig::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_PROGRESS_BASIC_GAME_MODEL, m_GameProgress);
 }
 
 
@@ -52,6 +54,7 @@ BEGIN_MESSAGE_MAP(CGameDig, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_BASIC_MODEL_SETTING, &CGameDig::OnBnClickedButtonBasicModelSetting)
 	ON_BN_CLICKED(IDC_BUTTON_BASIC_MODEL_HELP, &CGameDig::OnBnClickedButtonBasicModelHelp)
 	ON_WM_LBUTTONUP()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -76,12 +79,9 @@ void CGameDig::InitBackground()
 BOOL CGameDig::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
-	// TODO:  在此添加额外的初始化
 	InitBackground();
 	InitElement();
 	UpdateWindow();
-	//Invalidate();
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }
@@ -92,6 +92,7 @@ void CGameDig::OnPaint()
 	CPaintDC dc(this); // device context for painting
 					   // TODO: 在此处添加消息处理程序代码
 					   // 不为绘图消息调用 CDialogEx::OnPaint()
+
 	dc.BitBlt(0, 0, 900, 600, &m_dcMem, 0, 0, SRCCOPY);
 
 }
@@ -99,30 +100,53 @@ void CGameDig::OnPaint()
 void CGameDig::InitElement() {
 	CClientDC dc(this);
 	HANDLE bmp = ::LoadImage(NULL, _T("theme\\cellPic\\newCellCollection2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-    m_dcElement.CreateCompatibleDC(&dc);
+	m_dcElement.CreateCompatibleDC(&dc);
 	m_dcElement.SelectObject(bmp);
 
 	//HANDLE bmpMark = ::LoadImage(NULL, _T("theme\\cellPic\\animal_mask.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	//m_dcMark.CreateCompatibleDC(&dc);
 	//m_dcMark.SelectObject(bmpMark);
+
+	HANDLE bmpPause = ::LoadImageW(NULL, _T("theme\\pic\\background_4.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	m_dcPause.CreateCompatibleDC(&dc);
+	m_dcPause.SelectObject(bmpPause);
+	m_dcCache.CreateCompatibleDC(&dc);
+	CBitmap bmpCache;
+	bmpCache.CreateCompatibleBitmap(&dc, 640, 400);
+	m_dcCache.SelectObject(bmpCache);
+	m_dcCache.BitBlt(0, 0, 640, 400, &m_dcPause, 0, 0, SRCCOPY);
 }
 
 
 void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 {
+	//if (!m_bPause)	return;
 	//初始化游戏地图
 	m_gameControl.StartGame();
+	//更新界面
+	UpdateMap();
+	//更新窗口
+	InvalidateRect(m_rtGameRect, FALSE);
+	//游戏标识设置
 	m_bPlaying = true;
+	//开始按钮禁止点击
 	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(FALSE);
-	
-    UpdateMap();
-	InvalidateRect(m_rtGameRect,FALSE);
+
+	//初始化进度条
+	m_GameProgress.SetRange(0, 300);//初始范围
+	m_GameProgress.SetStep(-1);//初始步数值
+	m_GameProgress.SetPos(300);//设置初始值
+	//启动定时器
+	this->SetTimer(PLAY_TIMER_ID, 1000, NULL);
+	//绘制当前秒数
+	DrawGameTime();
 }
 
 
 void CGameDig::OnBnClickedButtonBasicModelPrompt()
 {
 	if (!m_bPlaying)	return;
+	if (!m_bPause)	return;
 	//连子判断
 	Vertex avPath[MAX_VERTEX_NUM];
 	int nVexNum = 0;
@@ -141,15 +165,31 @@ void CGameDig::OnBnClickedButtonBasicModelPrompt()
 
 void CGameDig::OnBnClickedButtonBasicModelSuspendGame()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	CClientDC dc(this);
+
+	if (!m_bPlaying)
+		return;
+	if (m_bPause) {
+		KillTimer(PLAY_TIMER_ID);
+		m_dcMem.BitBlt(MAP_LEFT, MAP_TOP, 640, 400, &m_dcCache, 0, 0, SRCCOPY);
+		InvalidateRect(m_rtGameRect, FALSE);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->SetWindowTextW(_T("继续游戏"));
+	}
+	else {
+		this->SetTimer(PLAY_TIMER_ID, 1000, NULL);
+		UpdateMap();
+		InvalidateRect(m_rtGameRect, FALSE);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->SetWindowTextW(_T("暂停游戏"));
+	}
+	m_bPause = !m_bPause;
 }
 
 
 void CGameDig::OnBnClickedButtonBasicModelRearangement()
 {
-
 	if (!m_bPlaying)
 		return;
+	if (!m_bPause)	return;
 	//重排，调用CGameControl::ResetGraph
 	m_gameControl.ResetGraph();
 	//更新地图
@@ -173,13 +213,14 @@ void CGameDig::OnBnClickedButtonBasicModelHelp()
 
 void CGameDig::UpdateWindow()
 {
+
 	CRect rtWin;
 	CRect rtClient;
 	this->GetWindowRect(rtWin);
 	this->GetClientRect(rtClient);
 	int nSpanWidth = rtWin.Width() - rtClient.Width();
 	int nSpanHeight = rtWin.Height() - rtClient.Height();
-	MoveWindow(0, 0,900 + nSpanWidth, 600 + nSpanHeight);
+	MoveWindow(0, 0, 900 + nSpanWidth, 600 + nSpanHeight);
 	CenterWindow();
 }
 
@@ -208,6 +249,8 @@ void CGameDig::UpdateMap()
 
 void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 {
+	
+
 	if (point.x < m_ptGameTop.x || point.y < m_ptGameTop.y) {
 		return CDialog::OnLButtonUp(nFlags, point);
 	}
@@ -229,18 +272,15 @@ void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 		int nVexNum = 0;
 		//判断是否是相同图片
 		if (m_gameControl.Link(avPath, nVexNum)) {
+			//DrawGameTime();
 			//画提示线
 			DrawTipLine(avPath, nVexNum);
 			//清除
 			UpdateMap();
-
+			JudgeWin();
 		}
 		Sleep(200);
 		InvalidateRect(m_rtGameRect, FALSE);
-		if (m_gameControl.IsWin()) {
-			MessageBox(_T("win"));
-			return;
-		}
 	}
 	m_bFirstPoint = !m_bFirstPoint;
 }
@@ -261,7 +301,7 @@ void CGameDig::DrawTipLine(Vertex asvPath[MAX_VERTEX_NUM], int nVexNum) {
 	CClientDC dc(this);
 	CPen penLine(PS_SOLID, 2, RGB(0, 255, 0));
 	CPen * pOldPen = dc.SelectObject(&penLine);
-	
+
 	dc.MoveTo(
 		m_ptGameTop.x + asvPath[0].col * m_sizeElem.cx + m_sizeElem.cx / 2,
 		m_ptGameTop.y + asvPath[0].row * m_sizeElem.cy + m_sizeElem.cy / 2
@@ -271,7 +311,68 @@ void CGameDig::DrawTipLine(Vertex asvPath[MAX_VERTEX_NUM], int nVexNum) {
 		dc.LineTo(
 			m_ptGameTop.x + asvPath[i].col * m_sizeElem.cx + m_sizeElem.cx / 2,
 			m_ptGameTop.y + asvPath[i].row * m_sizeElem.cy + m_sizeElem.cy / 2
-			);
+		);
 	}
 	dc.SelectObject(pOldPen);
+}
+
+void CGameDig::OnTimer(UINT_PTR nIDEvent)
+{
+	DrawGameTime();
+	if (nIDEvent == PLAY_TIMER_ID && m_bPlaying) {
+		m_GameProgress.StepIt();
+		JudgeWin();
+	}
+	
+	CDialogEx::OnTimer(nIDEvent);
+}
+
+
+void CGameDig::DrawGameTime()
+{
+	//CPaintDC dc(this);
+	CFont timeFont;
+	timeFont.CreatePointFont(200, _T("Consolas"));
+	CFont * oldFont;
+	oldFont = m_dcMem.SelectObject(&timeFont);
+	m_dcMem.SetTextColor(RGB(215, 202, 153));
+	m_dcMem.SetBkColor(RGB(255, 0, 255));
+	int time = m_GameProgress.GetPos();
+	CString strTime;
+	strTime.Format(_T("%d"), time);
+	//dc.GetTextExtent(strTime);
+	CRect rect;
+	GetClientRect(&rect);
+	CSize size;
+	size = m_dcMem.GetTextExtent(strTime, strTime.GetLength());
+	int x = ((rect.Width() - size.cx) / 2) + 340;
+	int y = ((rect.Height() - size.cy) / 2) + 210;
+	m_dcMem.TextOutW(x, y, strTime);
+
+	m_dcMem.SelectObject(&timeFont);
+	Invalidate(FALSE);
+}
+
+
+void CGameDig::JudgeWin()
+{
+	int bGameStatus = m_gameControl.IsWin(m_GameProgress.GetPos());
+	if (bGameStatus == GAME_PALY) {
+		return;
+	}
+	else {
+		m_bPlaying = false;
+		KillTimer(PLAY_TIMER_ID);
+
+		CString strTitle;
+		this->GetWindowTextW(strTitle);
+		if (bGameStatus == GAME_SUCCESS) {
+			MessageBox(_T("WIN!!!!"), strTitle);
+		}
+		else
+		{
+			MessageBox(_T("oh, NO!!!! GAME OVER!!!"), strTitle);
+		}
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(TRUE);
+	}
 }
