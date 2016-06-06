@@ -92,6 +92,8 @@ BOOL CConnectPlayerMFCDlg::OnInitDialog()
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
+	this->SetWindowTextW(_T("欢乐连连看"));
+
 	CMenu* pSysMenu = GetSystemMenu(FALSE);
 	if (pSysMenu != NULL)
 	{
@@ -232,7 +234,16 @@ void CConnectPlayerMFCDlg::OnBnClickedButtonBasicModel()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	this->ShowWindow(SW_HIDE);
+
+	CBasicGame* basic = new CBasicGame;
+	FLAG basicFlag;
+	basicFlag.bProp = false;
+	basicFlag.bTimer = true;
+	basicFlag.bScore = false;
+	basicFlag.szTitle = _T("欢乐连连看————基本模式");
+	basic->SetGameFlag(basicFlag);
 	CGameDig dlg;
+	dlg.SetGameModel(basic);
 	dlg.DoModal();
 	this->ShowWindow(SW_SHOW);
 
@@ -241,7 +252,18 @@ void CConnectPlayerMFCDlg::OnBnClickedButtonBasicModel()
 
 void CConnectPlayerMFCDlg::OnBnClickedButtonRelaxModel()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	this->ShowWindow(SW_HIDE);
+	CEasyGame* easy = new CEasyGame;
+	FLAG easyFlag;
+	easyFlag.bProp = true;
+	easyFlag.bTimer = false;
+	easyFlag.bScore = true;
+	easyFlag.szTitle = _T("欢乐连连看————休闲模式");
+	easy->SetGameFlag(easyFlag);
+	CGameDig dlg;
+	dlg.SetGameModel(easy);
+	dlg.DoModal();
+	this->ShowWindow(SW_SHOW);
 }
 
 

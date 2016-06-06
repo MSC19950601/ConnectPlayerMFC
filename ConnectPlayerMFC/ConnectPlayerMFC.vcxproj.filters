@@ -54,6 +54,15 @@
     <ClInclude Include="Test.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HelpDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicGame.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EasyGame.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectPlayerMFC.cpp">
@@ -78,6 +87,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HelpDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicGame.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EasyGame.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -138,6 +156,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="theme\cellPic\y9.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\copyright.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

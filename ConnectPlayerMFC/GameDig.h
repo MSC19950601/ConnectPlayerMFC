@@ -3,6 +3,9 @@
 #include "global.h"
 #include "GameControl.h"
 #include "afxcmn.h"
+#include "HelpDlg.h"
+#include "BasicGame.h"
+#include "EasyGame.h"
 
 // CGameDig 对话框
 
@@ -16,7 +19,7 @@ public:
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_DIALOG_GAME_BASIC };
+	enum { IDD = IDD_DIALOG_GAME };
 #endif
 
 protected:
@@ -46,11 +49,20 @@ protected:
 	CRect m_rtGameRect;
 	Vertex m_ptSelFirst;
 	Vertex m_ptSelSec;
-	CGameControl m_gameControl;
+	//CBasicGame m_gameControl;
 
 	bool m_bPlaying;
 
 	bool m_bPause;
+
+	FLAG m_flag;
+
+	CGameControl* m_pGameC;
+
+	bool m_bProp;
+
+	//bool bSuc;
+
 public:
 	
 	virtual BOOL OnInitDialog();
@@ -69,4 +81,11 @@ public:
 
 	void DrawGameTime();
 	void JudgeWin();
+
+	void SetGameModel(CGameControl* pGameC);
+
+	void DrawGameGrade();
+
+	void CalculateGameGrade();
+	afx_msg void OnBnClickedButtonTrick();
 };

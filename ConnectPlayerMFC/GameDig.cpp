@@ -12,7 +12,7 @@
 IMPLEMENT_DYNAMIC(CGameDig, CDialogEx)
 
 CGameDig::CGameDig(CWnd* pParent /*=NULL*/)
-	: CDialogEx(IDD_DIALOG_GAME_BASIC, pParent)
+	: CDialogEx(IDD_DIALOG_GAME, pParent)
 {
 	m_ptGameTop.x = MAP_LEFT;
 	m_ptGameTop.y = MAP_TOP;
@@ -32,6 +32,11 @@ CGameDig::CGameDig(CWnd* pParent /*=NULL*/)
 	m_bPlaying = false;
 
 	m_bPause = false;
+
+	m_bProp = false;
+
+	//what the fuck!
+	//bSuc = false;
 }
 
 CGameDig::~CGameDig()
@@ -55,6 +60,7 @@ BEGIN_MESSAGE_MAP(CGameDig, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_BASIC_MODEL_HELP, &CGameDig::OnBnClickedButtonBasicModelHelp)
 	ON_WM_LBUTTONUP()
 	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_BUTTON_TRICK, &CGameDig::OnBnClickedButtonTrick)
 END_MESSAGE_MAP()
 
 
@@ -79,6 +85,27 @@ void CGameDig::InitBackground()
 BOOL CGameDig::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+	this->GetDlgItem(IDC_PROGRESS_BASIC_GAME_MODEL)->ShowWindow(SW_HIDE);
+
+	m_flag = m_pGameC->GetGameFlag();
+	if (m_flag.bScore) {
+
+		this->SetWindowTextW(m_flag.szTitle);
+
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_PROMPT)->EnableWindow(FALSE);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_REARANGEMENT)->EnableWindow(FALSE);
+		this->GetDlgItem(IDC_BUTTON_TRICK)->EnableWindow(FALSE);
+
+
+	}
+	else {
+
+		this->SetWindowTextW(m_flag.szTitle);
+
+		this->GetDlgItem(IDC_BUTTON_TRICK)->ShowWindow(SW_HIDE);
+		this->GetDlgItem(IDC_STATIC_SCORE)->ShowWindow(SW_HIDE);
+	}
+
 	InitBackground();
 	InitElement();
 	UpdateWindow();
@@ -120,9 +147,12 @@ void CGameDig::InitElement() {
 
 void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 {
+	if(!m_flag.bScore)
+		this->GetDlgItem(IDC_PROGRESS_BASIC_GAME_MODEL)->ShowWindow(SW_SHOW);
+
 	//if (!m_bPause)	return;
 	//初始化游戏地图
-	m_gameControl.StartGame();
+	m_pGameC->StartGame();
 	//更新界面
 	UpdateMap();
 	//更新窗口
@@ -132,33 +162,63 @@ void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 	//开始按钮禁止点击
 	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(FALSE);
 
-	//初始化进度条
-	m_GameProgress.SetRange(0, 300);//初始范围
-	m_GameProgress.SetStep(-1);//初始步数值
-	m_GameProgress.SetPos(300);//设置初始值
-	//启动定时器
-	this->SetTimer(PLAY_TIMER_ID, 1000, NULL);
-	//绘制当前秒数
-	DrawGameTime();
+	if (!m_flag.bScore) {
+		//初始化进度条
+		m_GameProgress.SetRange(0, 300);//初始范围
+		m_GameProgress.SetStep(-1);//初始步数值
+		m_GameProgress.SetPos(300);//设置初始值
+								   //启动定时器
+		this->SetTimer(PLAY_TIMER_ID, 1000, NULL);
+		//绘制当前秒数
+		DrawGameTime();
+	}
 }
 
 
 void CGameDig::OnBnClickedButtonBasicModelPrompt()
 {
-	if (!m_bPlaying)	return;
-	if (!m_bPause)	return;
-	//连子判断
-	Vertex avPath[MAX_VERTEX_NUM];
-	int nVexNum = 0;
-	if (m_gameControl.Help(avPath, nVexNum)) {
-		m_ptSelFirst = avPath[0];
-		m_ptSelSec = avPath[nVexNum - 1];
-		DrawTipFrame(m_ptSelFirst.row, m_ptSelFirst.col);
-		DrawTipFrame(m_ptSelSec.row, m_ptSelSec.col);
-		DrawTipLine(avPath, nVexNum);
-		UpdateMap();
-		Sleep(200);
-		InvalidateRect(m_rtGameRect, FALSE);
+	if (m_flag.bScore) {
+		if (m_flag.bScore && m_pGameC->GetGrade() > 20) {
+			int nGrade = m_pGameC->GetGrade();
+			nGrade = nGrade - 20;
+			m_pGameC->SetGrade(nGrade);
+			DrawGameGrade();
+
+			Vertex avPath[MAX_VERTEX_NUM];
+			int nVexNum = 0;
+			if (m_pGameC->Help(avPath, nVexNum)) {
+				m_ptSelFirst = avPath[0];
+				m_ptSelSec = avPath[nVexNum - 1];
+				DrawTipFrame(m_ptSelFirst.row, m_ptSelFirst.col);
+				DrawTipFrame(m_ptSelSec.row, m_ptSelSec.col);
+				DrawTipLine(avPath, nVexNum);
+				UpdateMap();
+				Sleep(200);
+				InvalidateRect(m_rtGameRect, FALSE);
+			}
+
+		}
+		else {
+			MessageBox(_T("积分不足!!!"));
+			return;
+		}
+	}
+	else {
+		if (!m_bPlaying)	return;
+		//if (m_bPause)	return;
+		//连子判断
+		Vertex avPath[MAX_VERTEX_NUM];
+		int nVexNum = 0;
+		if (m_pGameC->Help(avPath, nVexNum)) {
+			m_ptSelFirst = avPath[0];
+			m_ptSelSec = avPath[nVexNum - 1];
+			DrawTipFrame(m_ptSelFirst.row, m_ptSelFirst.col);
+			DrawTipFrame(m_ptSelSec.row, m_ptSelSec.col);
+			DrawTipLine(avPath, nVexNum);
+			UpdateMap();
+			Sleep(200);
+			InvalidateRect(m_rtGameRect, FALSE);
+		}
 	}
 }
 
@@ -176,10 +236,19 @@ void CGameDig::OnBnClickedButtonBasicModelSuspendGame()
 		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->SetWindowTextW(_T("继续游戏"));
 	}
 	else {
-		this->SetTimer(PLAY_TIMER_ID, 1000, NULL);
-		UpdateMap();
-		InvalidateRect(m_rtGameRect, FALSE);
-		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->SetWindowTextW(_T("暂停游戏"));
+		//休闲模式要修改
+		if (!m_flag.bScore) {
+			this->SetTimer(PLAY_TIMER_ID, 1000, NULL);
+			UpdateMap();
+			InvalidateRect(m_rtGameRect, FALSE);
+			this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->SetWindowTextW(_T("暂停游戏"));
+		}
+		else 
+		{
+			UpdateMap();
+			InvalidateRect(m_rtGameRect, FALSE);
+			this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->SetWindowTextW(_T("暂停游戏"));
+		}
 	}
 	m_bPause = !m_bPause;
 }
@@ -187,15 +256,36 @@ void CGameDig::OnBnClickedButtonBasicModelSuspendGame()
 
 void CGameDig::OnBnClickedButtonBasicModelRearangement()
 {
-	if (!m_bPlaying)
-		return;
-	if (!m_bPause)	return;
-	//重排，调用CGameControl::ResetGraph
-	m_gameControl.ResetGraph();
-	//更新地图
-	UpdateMap();
-	//重绘界面
-	InvalidateRect(m_rtGameRect, FALSE);
+	if (m_flag.bScore) {
+		if (m_flag.bScore && m_pGameC->GetGrade() > 50) {
+			int nGrade = m_pGameC->GetGrade();
+			nGrade = nGrade - 50;
+			m_pGameC->SetGrade(nGrade);
+			DrawGameGrade();
+
+			m_pGameC->ResetGraph();
+			//更新地图
+			UpdateMap();
+			//重绘界面
+			InvalidateRect(m_rtGameRect, FALSE);
+
+		}
+		else {
+			MessageBox(_T("积分不足!!!"));
+			return;
+		}
+	}
+	else {
+		if (!m_bPlaying)
+			return;
+		//if (m_bPause)	return;
+		//重排，调用CGameControl::ResetGraph
+		m_pGameC->ResetGraph();
+		//更新地图
+		UpdateMap();
+		//重绘界面
+		InvalidateRect(m_rtGameRect, FALSE);
+	}
 }
 
 
@@ -207,7 +297,8 @@ void CGameDig::OnBnClickedButtonBasicModelSetting()
 
 void CGameDig::OnBnClickedButtonBasicModelHelp()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	CHelpDlg dlg;
+	dlg.DoModal();
 }
 
 
@@ -234,7 +325,7 @@ void CGameDig::UpdateMap()
 	m_dcMem.BitBlt(m_rtGameRect.left, m_rtGameRect.top, m_rtGameRect.Width(), m_rtGameRect.Height(), &m_dcBG, m_rtGameRect.left, m_rtGameRect.top, SRCCOPY);
 	for (int i = 0; i < MAX_ROW;i++) {
 		for (int j = 0;j < MAX_COL;j++) {
-			int nElemVal = m_gameControl.GetElement(i, j);
+			int nElemVal = m_pGameC->GetElement(i, j);
 			if (nElemVal == BLANK) {
 				continue;
 			}
@@ -251,6 +342,7 @@ void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	
 
+	//基本实现
 	if (point.x < m_ptGameTop.x || point.y < m_ptGameTop.y) {
 		return CDialog::OnLButtonUp(nFlags, point);
 	}
@@ -263,21 +355,33 @@ void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 	}
 	if (m_bFirstPoint) {
 		DrawTipFrame(nRow, nCol);
-		m_gameControl.SetFirstPoint(nRow, nCol);
+		m_pGameC->SetFirstPoint(nRow, nCol);
 	}
 	else {
 		DrawTipFrame(nRow, nCol);
-		m_gameControl.SetSecPoint(nRow, nCol);
+		m_pGameC->SetSecPoint(nRow, nCol);
 		Vertex avPath[MAX_VERTEX_NUM];
 		int nVexNum = 0;
 		//判断是否是相同图片
-		if (m_gameControl.Link(avPath, nVexNum)) {
-			//DrawGameTime();
+		if (m_pGameC->Link(avPath, nVexNum)) {
 			//画提示线
 			DrawTipLine(avPath, nVexNum);
 			//清除
 			UpdateMap();
-			JudgeWin();
+			//if(!m_flag.bScore)
+				JudgeWin();
+			if (m_flag.bScore) {
+				DrawGameGrade();
+				CalculateGameGrade();
+			}
+		}
+
+		//使用道具实现
+		if (m_bProp) {
+			bool bSuc = m_pGameC->PropLink();
+			UpdateMap();
+			DrawGameGrade();
+			m_bProp = false;
 		}
 		Sleep(200);
 		InvalidateRect(m_rtGameRect, FALSE);
@@ -356,23 +460,110 @@ void CGameDig::DrawGameTime()
 
 void CGameDig::JudgeWin()
 {
-	int bGameStatus = m_gameControl.IsWin(m_GameProgress.GetPos());
-	if (bGameStatus == GAME_PALY) {
-		return;
+	if (m_flag.bScore) {
+		int	bGameStatus = m_pGameC->IsWin(1000000);
+		if (bGameStatus == GAME_PALY) {
+			return;
+		}
+		else {
+			m_bPlaying = false;
+			KillTimer(PLAY_TIMER_ID);
+
+			CString strTitle;
+			this->GetWindowTextW(strTitle);
+			if (bGameStatus == GAME_SUCCESS) {
+				MessageBox(_T("WIN!!!!"), strTitle);
+			}
+			else
+			{
+				MessageBox(_T("oh, NO!!!! GAME OVER!!!"), strTitle);
+			}
+			this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(TRUE);
+		}
 	}
 	else {
-		m_bPlaying = false;
-		KillTimer(PLAY_TIMER_ID);
+		int	bGameStatus = m_pGameC->IsWin(m_GameProgress.GetPos());
+		if (bGameStatus == GAME_PALY) {
+			return;
+		}
+		else {
+			m_bPlaying = false;
+			KillTimer(PLAY_TIMER_ID);
 
-		CString strTitle;
-		this->GetWindowTextW(strTitle);
-		if (bGameStatus == GAME_SUCCESS) {
-			MessageBox(_T("WIN!!!!"), strTitle);
+			CString strTitle;
+			this->GetWindowTextW(strTitle);
+			if (bGameStatus == GAME_SUCCESS) {
+				MessageBox(_T("WIN!!!!"), strTitle);
+			}
+			else
+			{
+				MessageBox(_T("oh, NO!!!! GAME OVER!!!"), strTitle);
+			}
+			this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(TRUE);
 		}
-		else
-		{
-			MessageBox(_T("oh, NO!!!! GAME OVER!!!"), strTitle);
-		}
-		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(TRUE);
 	}
+}
+
+void CGameDig::SetGameModel(CGameControl* pGameC) {
+	m_pGameC = pGameC;
+}
+
+void CGameDig::DrawGameGrade() {
+	int nGrade = m_pGameC->GetGrade();
+	CFont scoreFont;
+	scoreFont.CreatePointFont(200, _T("Consolas"));
+	CFont * oldFont;
+	oldFont = m_dcMem.SelectObject(&scoreFont);
+	m_dcMem.SetTextColor(RGB(215, 202, 153));
+	m_dcMem.SetBkColor(RGB(255, 0, 255));
+
+	CString strScore;
+	strScore.Format(_T("%d"), nGrade);
+	CRect rect;
+	GetClientRect(&rect);
+	CSize size;
+	size = m_dcMem.GetTextExtent(strScore, strScore.GetLength());
+	int x = ((rect.Width() - size.cx) / 2) + 340;
+	int y = ((rect.Height() - size.cy) / 2) + 210;
+	m_dcMem.TextOutW(x, y, strScore);
+
+	m_dcMem.SelectObject(&scoreFont);
+	Invalidate(FALSE);
+}
+
+void CGameDig::CalculateGameGrade() {
+	int nGrade = m_pGameC->GetGrade();
+	if (nGrade >= 20 && !this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_PROMPT)->IsWindowEnabled()) {
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_PROMPT)->EnableWindow(TRUE);
+
+	}
+
+
+	if (nGrade >= 50 && !this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_REARANGEMENT)->IsWindowEnabled()) {
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_REARANGEMENT)->EnableWindow(TRUE);
+		//nGrade = nGrade - 50;
+		//m_pGameC->SetGrade(nGrade);
+	}
+
+	if (nGrade % 100 == 0) {
+		if(!this->GetDlgItem(IDC_BUTTON_TRICK)->IsWindowEnabled())
+			this->GetDlgItem(IDC_BUTTON_TRICK)->EnableWindow(TRUE);
+		int nProp = m_pGameC->GetPropNum();
+		nProp++;
+		m_pGameC->SetPropNum(nProp);
+	}
+
+}
+
+void CGameDig::OnBnClickedButtonTrick()
+{
+	if (m_pGameC->GetPropNum() < 1) {
+		MessageBox(_T("道具不足!!!"));
+		return;
+	}
+	m_bProp = true;
+	//每使用一次道具，道具数量减少一个
+	int nProp = m_pGameC->GetPropNum();
+	nProp--;
+	m_pGameC->SetPropNum(nProp);
 }

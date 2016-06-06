@@ -7,6 +7,13 @@ typedef struct tagVertex {
 	tagVertex() :row(-1), col(-1), info(-1) {};
 }Vertex;
 
+typedef struct tagFlag{
+	bool bTimer;//计时进度条
+	bool bProp;//道具
+	bool bScore;//积分
+	CString szTitle;//对话框标题栏文字
+}FLAG;//true表示显示，false表示不显示
+
 #define BLANK -1
 
 #define MAX_ROW 10 // 游戏地图行数
