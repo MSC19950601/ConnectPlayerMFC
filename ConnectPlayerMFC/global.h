@@ -1,4 +1,6 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
+#include <string>
 //定义顶点结构体
 typedef struct tagVertex {
 	int row;//行
@@ -7,12 +9,19 @@ typedef struct tagVertex {
 	tagVertex() :row(-1), col(-1), info(-1) {};
 }Vertex;
 
-typedef struct tagFlag{
+typedef struct tagFlag {
 	bool bTimer;//计时进度条
 	bool bProp;//道具
 	bool bScore;//积分
 	CString szTitle;//对话框标题栏文字
 }FLAG;//true表示显示，false表示不显示
+
+typedef struct tagScore {
+	int nNode = -1;//游戏模式：1、休闲模式，2、关卡模式
+	int nGrade = -1;//积分分数
+	int nLevel = -1;//积分等级
+	CString strName = _T("NO USER!");//玩家姓名
+}SCORE;
 
 #define BLANK -1
 

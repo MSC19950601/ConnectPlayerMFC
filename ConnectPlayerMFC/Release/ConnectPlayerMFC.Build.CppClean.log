@@ -1,24 +1,30 @@
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.pch
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\vc140.pdb
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\stdafx.obj
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\test.obj
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\graph.obj
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\gamelogic.obj
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\gamedig.obj
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\gamecontrol.obj
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfcdlg.obj
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.obj
-c:\users\ellery queen\desktop\connectplayermfc\release\connectplayermfc.exe
-c:\users\ellery queen\desktop\connectplayermfc\release\connectplayermfc.ipdb
-c:\users\ellery queen\desktop\connectplayermfc\release\connectplayermfc.iobj
-c:\users\ellery queen\desktop\connectplayermfc\release\connectplayermfc.pdb
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.res
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\cl.command.1.tlog
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\cl.read.1.tlog
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\cl.write.1.tlog
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\link.command.1.tlog
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\link.read.1.tlog
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\link.write.1.tlog
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\rc.command.1.tlog
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\rc.read.1.tlog
-c:\users\ellery queen\desktop\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\rc.write.1.tlog
+f:\myvsproject\connectplayermfc\connectplayermfc\release\vc140.pdb
+f:\myvsproject\connectplayermfc\connectplayermfc\release\test.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\scorelogic.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\scoredao.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\helpdlg.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\graph.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\gamelogic.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\gamedig.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\gamecontrol.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\easygame.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfcdlg.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\basicgame.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\rankdlg.obj
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.pch
+f:\myvsproject\connectplayermfc\connectplayermfc\release\stdafx.obj
+f:\myvsproject\connectplayermfc\release\connectplayermfc.exe
+f:\myvsproject\connectplayermfc\release\connectplayermfc.ipdb
+f:\myvsproject\connectplayermfc\release\connectplayermfc.iobj
+f:\myvsproject\connectplayermfc\release\connectplayermfc.pdb
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.res
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\cl.command.1.tlog
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\cl.read.1.tlog
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\cl.write.1.tlog
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\link.command.1.tlog
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\link.read.1.tlog
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\link.write.1.tlog
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\rc.command.1.tlog
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\rc.read.1.tlog
+f:\myvsproject\connectplayermfc\connectplayermfc\release\connectplayermfc.tlog\rc.write.1.tlog

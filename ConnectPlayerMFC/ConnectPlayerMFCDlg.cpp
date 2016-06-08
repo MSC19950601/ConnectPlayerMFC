@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include "EasySize.h"
 #include "GameDig.h"
+#include "RankDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -32,6 +33,7 @@ public:
 // 实现
 protected:
 	DECLARE_MESSAGE_MAP()
+	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -275,7 +277,10 @@ void CConnectPlayerMFCDlg::OnBnClickedButtonGradeModel()
 
 void CConnectPlayerMFCDlg::OnBnClickedButtonRisk()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	this->ShowWindow(SW_HIDE);
+	CRankDlg dlg;
+	dlg.DoModal();
+	this->ShowWindow(SW_SHOW);
 }
 
 
@@ -288,4 +293,12 @@ void CConnectPlayerMFCDlg::OnBnClickedButtonHelp()
 void CConnectPlayerMFCDlg::OnBnClickedButtonQuit()
 {
 	// TODO: 在此添加控件通知处理程序代码
+}
+
+
+BOOL CAboutDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	return CDialogEx::OnNotify(wParam, lParam, pResult);
 }

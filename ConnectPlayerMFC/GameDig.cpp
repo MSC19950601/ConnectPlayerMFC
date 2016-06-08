@@ -5,6 +5,7 @@
 #include "ConnectPlayerMFC.h"
 #include "GameDig.h"
 #include "afxdialogex.h"
+#include "SettingDlg.h"
 
 
 // CGameDig 对话框
@@ -291,7 +292,8 @@ void CGameDig::OnBnClickedButtonBasicModelRearangement()
 
 void CGameDig::OnBnClickedButtonBasicModelSetting()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	CSettingDlg dlg;
+	dlg.DoModal();
 }
 
 
@@ -473,6 +475,14 @@ void CGameDig::JudgeWin()
 			this->GetWindowTextW(strTitle);
 			if (bGameStatus == GAME_SUCCESS) {
 				MessageBox(_T("WIN!!!!"), strTitle);
+
+				INT_PTR nRes;
+				nRes = MessageBox(_T("您确定要将积分记入排行榜吗？"), _T("积分记录"), MB_OKCANCEL | MB_ICONQUESTION);
+				if (IDCANCEL == nRes)
+					return;
+				else {
+					m_pGameC->SaveScore();
+				}
 			}
 			else
 			{

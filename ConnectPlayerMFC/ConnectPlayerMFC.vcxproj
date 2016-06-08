@@ -52,7 +52,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -190,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicGame.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="ConnectPlayerMFC.h" />
     <ClInclude Include="ConnectPlayerMFCDlg.h" />
     <ClInclude Include="EasyGame.h" />
@@ -200,13 +201,19 @@
     <ClInclude Include="global.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="HelpDlg.h" />
+    <ClInclude Include="RankDlg.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ScoreDao.h" />
+    <ClInclude Include="ScoreLogic.h" />
+    <ClInclude Include="SettingDlg.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Test.h" />
+    <ClInclude Include="ThemeOptionDlg.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicGame.cpp" />
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="ConnectPlayerMFC.cpp" />
     <ClCompile Include="ConnectPlayerMFCDlg.cpp" />
     <ClCompile Include="EasyGame.cpp" />
@@ -215,6 +222,10 @@
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="HelpDlg.cpp" />
+    <ClCompile Include="RankDlg.cpp" />
+    <ClCompile Include="ScoreDao.cpp" />
+    <ClCompile Include="ScoreLogic.cpp" />
+    <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -222,11 +233,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Test.cpp" />
+    <ClCompile Include="ThemeOptionDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ConnectPlayerMFC.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="res\ConnectPlayerMFC.rc2" />
   </ItemGroup>
   <ItemGroup>

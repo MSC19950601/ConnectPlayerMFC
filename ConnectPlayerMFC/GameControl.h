@@ -64,6 +64,11 @@ public:
 		return true;
 	}
 
+	//≈≈––∞Ò
+	virtual bool SaveScore() {
+		return false;
+	}
+
 	//void StartGame();
 	//int IsWin(int nTime);
 	//bool Help(Vertex avPath[MAX_VERTEX_NUM], int &nVexnum);

@@ -1,6 +1,9 @@
+
 #include "stdafx.h"
 #include "EasyGame.h"
-
+#include <time.h>
+#include <string>
+#include <sstream>
 
 CEasyGame::CEasyGame()
 {
@@ -107,6 +110,29 @@ bool CEasyGame::PropLink() {
 		GameLogic gameLogic;
 		gameLogic.Clear(m_graph, m_ptSelFirst, m_ptSelSec);
 		m_nGrade += 10;
+		return true;
+	}
+	return false;
+}
+
+bool CEasyGame::SaveScore() {
+	int finalScore = m_nGrade;
+	time_t now = time(0);
+	tm *ltm = localtime(&now);
+	int year = 1900 + ltm->tm_year;
+	int month = 1 + ltm->tm_mon;
+	int day = ltm->tm_mday;
+	int hour = ltm->tm_hour;
+	int minute = ltm->tm_min;
+	int sec = ltm->tm_sec;
+	SCORE newScore;
+	newScore.nGrade = finalScore;
+	newScore.nLevel = newScore.nGrade / 500 + 1;
+	newScore.nNode = 1;
+	newScore.strName.Format(_T("%d%d%d%d%d%d"),year,month,day,hour,minute,sec);
+	CScoreLogic scoreLogic;
+	if (scoreLogic.SaveScore(newScore)) {
+
 		return true;
 	}
 	return false;
