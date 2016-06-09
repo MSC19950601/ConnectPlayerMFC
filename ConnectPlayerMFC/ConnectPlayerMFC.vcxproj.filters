@@ -81,6 +81,9 @@
     <ClInclude Include="Config.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ConfigLogic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectPlayerMFC.cpp">
@@ -132,6 +135,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Config.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigLogic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -196,6 +202,12 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\copyright.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\pic\newBackground3.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="theme\pic\newBackground3.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

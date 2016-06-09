@@ -6,7 +6,8 @@
 #include "GameDig.h"
 #include "afxdialogex.h"
 #include "SettingDlg.h"
-
+#include "Config.h"
+#include "ConfigLogic.h"
 
 // CGameDig ¶Ô»°¿ò
 
@@ -71,7 +72,7 @@ END_MESSAGE_MAP()
 void CGameDig::InitBackground()
 {
 	CClientDC dc(this);
-	HANDLE hBmpBG = ::LoadImageW(NULL, _T("theme\\pic\\newBackground3.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE hBmpBG = ::LoadImageW(NULL, _T("background\\newBackground3.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	m_dcBG.CreateCompatibleDC(&dc);
 	m_dcBG.SelectObject(hBmpBG);
 
@@ -80,6 +81,7 @@ void CGameDig::InitBackground()
 	bmpMem.CreateCompatibleBitmap(&dc, 900, 600);
 	m_dcMem.SelectObject(&bmpMem);
 	m_dcMem.BitBlt(0, 0, 900, 600, &m_dcBG, 0, 0, SRCCOPY);
+
 }
 
 
@@ -126,16 +128,33 @@ void CGameDig::OnPaint()
 }
 
 void CGameDig::InitElement() {
+	CString elem = CConfig::GetSingleInstance()->GetElemPath();
+	CString mask = CConfig::GetSingleInstance()->GetMaskPath();
+
+	if (CConfig::GetSingleInstance()->GetStyle() == 1) {
+		elem = _T("theme\\element1.bmp");
+		mask = _T("theme\\elementMask1.bmp");
+	}
+
+	if (CConfig::GetSingleInstance()->GetStyle() == 2) {
+		elem = _T("theme\\element2.bmp");
+		mask = _T("theme\\elementMask2.bmp");
+	}
+
 	CClientDC dc(this);
-	HANDLE bmp = ::LoadImage(NULL, _T("theme\\cellPic\\newCellCollection2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	//HANDLE bmp = ::LoadImage(NULL, _T("theme\\element3.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE bmp = ::LoadImage(NULL, elem, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	m_dcElement.CreateCompatibleDC(&dc);
 	m_dcElement.SelectObject(bmp);
 
-	//HANDLE bmpMark = ::LoadImage(NULL, _T("theme\\cellPic\\animal_mask.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-	//m_dcMark.CreateCompatibleDC(&dc);
-	//m_dcMark.SelectObject(bmpMark);
+	//HANDLE bmpMark = ::LoadImage(NULL, _T("theme\\elementMask3.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE bmpMark = ::LoadImage(NULL, mask, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	m_dcMark.CreateCompatibleDC(&dc);
+	m_dcMark.SelectObject(bmpMark);
 
-	HANDLE bmpPause = ::LoadImageW(NULL, _T("theme\\pic\\background_4.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+
+
+	HANDLE bmpPause = ::LoadImageW(NULL, _T("background\\background_4.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	m_dcPause.CreateCompatibleDC(&dc);
 	m_dcPause.SelectObject(bmpPause);
 	m_dcCache.CreateCompatibleDC(&dc);
@@ -293,7 +312,9 @@ void CGameDig::OnBnClickedButtonBasicModelRearangement()
 void CGameDig::OnBnClickedButtonBasicModelSetting()
 {
 	CSettingDlg dlg;
-	dlg.DoModal();
+	if (dlg.DoModal() == IDOK) {
+		UpdateTheme();
+	}
 }
 
 
@@ -331,9 +352,9 @@ void CGameDig::UpdateMap()
 			if (nElemVal == BLANK) {
 				continue;
 			}
-			//m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcMark, 0, nElemVal * nElemH, SRCPAINT);
-			//m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, nElemVal * nElemH, SRCAND);
-			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, nElemVal * nElemH, SRCCOPY);
+			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcMark, 0, nElemVal * nElemH, SRCPAINT);
+			m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, nElemVal * nElemH, SRCAND);
+			//m_dcMem.BitBlt(nLeft + j * nElemW, nTop + i * nElemH, nElemW, nElemH, &m_dcElement, 0, nElemVal * nElemH, SRCCOPY);
 		}
 	}
 	Invalidate(FALSE);
@@ -576,4 +597,49 @@ void CGameDig::OnBnClickedButtonTrick()
 	int nProp = m_pGameC->GetPropNum();
 	nProp--;
 	m_pGameC->SetPropNum(nProp);
+}
+
+void CGameDig::UpdateTheme() {
+
+	CConfigLogic logic;
+
+	int style = logic.GetStyle();
+	CString elem = logic.GetElemPath();
+	CString mask = logic.GetMaskPath();
+	CClientDC dc(this);
+
+	HANDLE bmp;
+	HANDLE bmpMark;
+	switch (style)
+	{
+	case 1:
+		bmp = ::LoadImage(NULL, _T("theme\\element1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		m_dcElement.CreateCompatibleDC(&dc);
+		m_dcElement.SelectObject(bmp);
+		bmpMark = ::LoadImage(NULL, _T("theme\\elementMask1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		m_dcMark.CreateCompatibleDC(&dc);
+		m_dcMark.SelectObject(bmpMark);
+		UpdateMap();
+		break;
+	case 2:
+		bmp = ::LoadImage(NULL, _T("theme\\element2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		m_dcElement.CreateCompatibleDC(&dc);
+		m_dcElement.SelectObject(bmp);
+		bmpMark = ::LoadImage(NULL, _T("theme\\elementMask2.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		m_dcMark.CreateCompatibleDC(&dc);
+		m_dcMark.SelectObject(bmpMark);
+		UpdateMap();
+		break;
+	case 3:
+		bmp = ::LoadImage(NULL, elem, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		m_dcElement.CreateCompatibleDC(&dc);
+		m_dcElement.SelectObject(bmp);
+		bmpMark = ::LoadImage(NULL, mask, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		m_dcMark.CreateCompatibleDC(&dc);
+		m_dcMark.SelectObject(bmpMark);
+		UpdateMap();
+		break;
+	default:
+		break;
+	}
 }

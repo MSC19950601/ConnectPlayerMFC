@@ -38,7 +38,7 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -191,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="BasicGame.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="ConfigLogic.h" />
     <ClInclude Include="ConnectPlayerMFC.h" />
     <ClInclude Include="ConnectPlayerMFCDlg.h" />
     <ClInclude Include="EasyGame.h" />
@@ -214,6 +215,7 @@
   <ItemGroup>
     <ClCompile Include="BasicGame.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="ConfigLogic.cpp" />
     <ClCompile Include="ConnectPlayerMFC.cpp" />
     <ClCompile Include="ConnectPlayerMFCDlg.cpp" />
     <ClCompile Include="EasyGame.cpp" />
@@ -260,6 +262,8 @@
     <Image Include="theme\pic\background_1.bmp" />
     <Image Include="theme\pic\background_1.jpg" />
     <Image Include="theme\pic\background_2.bmp" />
+    <Image Include="theme\pic\newBackground3.bmp" />
+    <Image Include="theme\pic\newBackground3.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

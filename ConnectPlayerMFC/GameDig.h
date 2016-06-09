@@ -88,4 +88,6 @@ public:
 
 	void CalculateGameGrade();
 	afx_msg void OnBnClickedButtonTrick();
+
+	void UpdateTheme();
 };

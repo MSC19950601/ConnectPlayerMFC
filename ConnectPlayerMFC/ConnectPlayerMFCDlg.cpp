@@ -9,6 +9,7 @@
 #include "EasySize.h"
 #include "GameDig.h"
 #include "RankDlg.h"
+#include "SettingDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -287,12 +288,16 @@ void CConnectPlayerMFCDlg::OnBnClickedButtonRisk()
 void CConnectPlayerMFCDlg::OnBnClickedButtonHelp()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	CHelpDlg dlg;
+	dlg.DoModal();
 }
 
 
 void CConnectPlayerMFCDlg::OnBnClickedButtonQuit()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	CSettingDlg dlg;
+	dlg.DoModal();
 }
 
 

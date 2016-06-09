@@ -98,7 +98,7 @@ BOOL CHelpDlg::OnInitDialog()
 	this->GetClientRect(&rtClient);
 
 	CClientDC dc(this);
-	HANDLE hBmpBG = ::LoadImageW(NULL, _T("theme\\pic\\help1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HANDLE hBmpBG = ::LoadImageW(NULL, _T("background\\help1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	m_dcHelp.CreateCompatibleDC(&dc);
 	m_dcHelp.SelectObject(hBmpBG);
 	m_dcMem.CreateCompatibleDC(&dc);

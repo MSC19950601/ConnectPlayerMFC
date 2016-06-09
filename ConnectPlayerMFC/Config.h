@@ -22,16 +22,25 @@ public:
 		return m_strElemPath;
 	}
 
+	void SetMaskPath(const CString& str) {
+		m_strMaskPath = str;
+	}
+
+	CString GetMaskPath() {
+		return m_strMaskPath;
+	}
+
 	static CConfig* GetSingleInstance();
 	static void ReleaseInstance();
 
 	void Save();
-	//void Load();
+	void Load();
 
 protected:
 	
 	static CConfig* m_pConfig;//唯一的实例对象
 	int m_nStyle;
 	CString m_strElemPath;
+	CString m_strMaskPath;
 };
 

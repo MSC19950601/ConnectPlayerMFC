@@ -22,7 +22,7 @@
 
 #include <afxdisp.h>        // MFC 自动化类
 #include <afxmsg_.h>
-
+#include <afxdlgs.h>
 
 
 #ifndef _AFX_NO_OLE_SUPPORT

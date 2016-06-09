@@ -40,7 +40,8 @@ END_MESSAGE_MAP()
 
 void CSettingDlg::OnBnClickedOk()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	
+	m_dlgTheme.Save();
 	CDialogEx::OnOK();
 }
 
@@ -57,7 +58,7 @@ BOOL CSettingDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	m_tabSetting.InsertItem(0, TEXT("主题设置"));
-	m_tabSetting.InsertItem(1, TEXT("音效"));
+	//m_tabSetting.InsertItem(1, TEXT("音效"));
 
 	m_dlgTheme.Create(IDD_CONFIG_THEME, &m_tabSetting);
 	CRect tabRect;

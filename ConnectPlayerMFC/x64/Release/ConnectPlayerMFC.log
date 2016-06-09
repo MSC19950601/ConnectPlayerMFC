@@ -1,0 +1,63 @@
+﻿  stdafx.cpp
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include\afx.h(38): warning C4996: 'MBCS_Support_Deprecated_In_MFC': MBCS support in MFC is deprecated and may be removed in a future version of MFC.
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include\afx.h(33): note: 参见“MBCS_Support_Deprecated_In_MFC”的声明
+  BasicGame.cpp
+  Config.cpp
+  ConfigLogic.cpp
+  ConnectPlayerMFC.cpp
+  ConnectPlayerMFCDlg.cpp
+ConnectPlayerMFCDlg.cpp(98): error C2039: “SetWindowTextW”: 不是“CConnectPlayerMFCDlg”的成员
+  f:\myvsproject\connectplayermfc\connectplayermfc\ConnectPlayerMFCDlg.h(10): note: 参见“CConnectPlayerMFCDlg”的声明
+ConnectPlayerMFCDlg.cpp(218): error C2039: “LoadBitmapW”: 不是“CBitmap”的成员
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include\afxwin.h(448): note: 参见“CBitmap”的声明
+  EasyGame.cpp
+  GameControl.cpp
+  GameDig.cpp
+GameDig.cpp(75): error C2664: “HANDLE LoadImageW(HINSTANCE,LPCWSTR,UINT,int,int,UINT)”: 无法将参数 2 从“const char [29]”转换为“LPCWSTR”
+  GameDig.cpp(75): note: 与指向的类型无关；转换要求 reinterpret_cast、C 样式转换或函数样式转换
+GameDig.cpp(95): error C2039: “SetWindowTextW”: 不是“CGameDig”的成员
+  f:\myvsproject\connectplayermfc\connectplayermfc\GameDig.h(12): note: 参见“CGameDig”的声明
+GameDig.cpp(105): error C2039: “SetWindowTextW”: 不是“CGameDig”的成员
+  f:\myvsproject\connectplayermfc\connectplayermfc\GameDig.h(12): note: 参见“CGameDig”的声明
+GameDig.cpp(141): error C2664: “HANDLE LoadImageW(HINSTANCE,LPCWSTR,UINT,int,int,UINT)”: 无法将参数 2 从“const char [27]”转换为“LPCWSTR”
+  GameDig.cpp(141): note: 与指向的类型无关；转换要求 reinterpret_cast、C 样式转换或函数样式转换
+GameDig.cpp(240): error C2039: “SetWindowTextW”: 不是“CWnd”的成员
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include\afxwin.h(2176): note: 参见“CWnd”的声明
+GameDig.cpp(248): error C2039: “SetWindowTextW”: 不是“CWnd”的成员
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include\afxwin.h(2176): note: 参见“CWnd”的声明
+GameDig.cpp(254): error C2039: “SetWindowTextW”: 不是“CWnd”的成员
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include\afxwin.h(2176): note: 参见“CWnd”的声明
+GameDig.cpp(461): error C2039: “TextOutW”: 不是“CDC”的成员
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include\afxwin.h(560): note: 参见“CDC”的声明
+GameDig.cpp(480): error C2039: “GetWindowTextW”: 不是“CGameDig”的成员
+  f:\myvsproject\connectplayermfc\connectplayermfc\GameDig.h(12): note: 参见“CGameDig”的声明
+GameDig.cpp(509): error C2039: “GetWindowTextW”: 不是“CGameDig”的成员
+  f:\myvsproject\connectplayermfc\connectplayermfc\GameDig.h(12): note: 参见“CGameDig”的声明
+GameDig.cpp(543): error C2039: “TextOutW”: 不是“CDC”的成员
+  C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include\afxwin.h(560): note: 参见“CDC”的声明
+  GameLogic.cpp
+  Graph.cpp
+  HelpDlg.cpp
+HelpDlg.cpp(101): error C2664: “HANDLE LoadImageW(HINSTANCE,LPCWSTR,UINT,int,int,UINT)”: 无法将参数 2 从“const char [20]”转换为“LPCWSTR”
+  HelpDlg.cpp(101): note: 与指向的类型无关；转换要求 reinterpret_cast、C 样式转换或函数样式转换
+  RankDlg.cpp
+  ScoreDao.cpp
+ScoreDao.cpp(67): error C2664: “int _wtoi(const wchar_t *)”: 无法将参数 1 从“CString”转换为“const wchar_t *”
+  ScoreDao.cpp(67): note: 没有可用于执行该转换的用户定义的转换运算符，或者无法调用该运算符
+ScoreDao.cpp(69): error C2664: “int _wtoi(const wchar_t *)”: 无法将参数 1 从“ATL::CStringT<char,StrTraitMFC_DLL<char,ATL::ChTraitsCRT<_CharType>>>”转换为“const wchar_t *”
+          with
+          [
+              _CharType=char
+          ]
+  ScoreDao.cpp(69): note: 没有可用于执行该转换的用户定义的转换运算符，或者无法调用该运算符
+ScoreDao.cpp(70): error C2664: “int _wtoi(const wchar_t *)”: 无法将参数 1 从“ATL::CStringT<char,StrTraitMFC_DLL<char,ATL::ChTraitsCRT<_CharType>>>”转换为“const wchar_t *”
+          with
+          [
+              _CharType=char
+          ]
+  ScoreDao.cpp(70): note: 没有可用于执行该转换的用户定义的转换运算符，或者无法调用该运算符
+  ScoreLogic.cpp
+ScoreLogic.cpp(33): warning C4267: “return”: 从“size_t”转换到“int”，可能丢失数据
+  SettingDlg.cpp
+  Test.cpp
+  ThemeOptionDlg.cpp

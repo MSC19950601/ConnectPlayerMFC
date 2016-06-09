@@ -24,6 +24,7 @@ protected:
 protected:
 	int m_nThemeType;
 	CString m_strElemPath;
+	CString m_strMaskPath;
 
 public:
 	afx_msg void OnBnClickRadio(UINT nID);
@@ -31,4 +32,6 @@ public:
 	afx_msg void OnBnClickedButtonSelfSettingElementPathFile();
 
 	void Save();
+	virtual BOOL OnInitDialog();
+	afx_msg void OnBnClickedButtonSelfSettingMaskPathFile();
 };
