@@ -5,6 +5,7 @@
 CGameControl::CGameControl()
 {
 	m_nGrade = 0;
+	m_nBarrier = 1;
 }
 
 

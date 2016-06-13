@@ -235,7 +235,6 @@ void CConnectPlayerMFCDlg::OnSize(UINT nType, int cx, int cy)
 
 void CConnectPlayerMFCDlg::OnBnClickedButtonBasicModel()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	this->ShowWindow(SW_HIDE);
 
 	CBasicGame* basic = new CBasicGame;
@@ -272,13 +271,26 @@ void CConnectPlayerMFCDlg::OnBnClickedButtonRelaxModel()
 
 void CConnectPlayerMFCDlg::OnBnClickedButtonGradeModel()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	this->ShowWindow(SW_HIDE);
+	CBarrierGame* barrier = new CBarrierGame;
+	FLAG barrierFlag;
+	barrierFlag.bProp = false;
+	barrierFlag.bScore = true;
+	barrierFlag.bTimer = true;
+	barrierFlag.szTitle = _T("欢乐连连看————关卡模式");
+	barrier->SetGameFlag(barrierFlag);
+	CGameDig dlg;
+	dlg.SetGameModel(barrier);
+	dlg.DoModal();
+	this->ShowWindow(SW_SHOW);
+
+
 }
 
 
 void CConnectPlayerMFCDlg::OnBnClickedButtonRisk()
 {
-	this->ShowWindow(SW_HIDE);
+	//this->ShowWindow(SW_HIDE);
 	CRankDlg dlg;
 	dlg.DoModal();
 	this->ShowWindow(SW_SHOW);

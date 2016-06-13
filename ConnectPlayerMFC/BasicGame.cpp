@@ -21,6 +21,19 @@ void CBasicGame::StartGame() {
 	m_test.output(m_graph);
 }
 
+int CBasicGame::IsWin(int nTime) {
+	GameLogic logic;
+	if (nTime <= 0) {
+		m_graph.ClearGraph();
+		return GAME_LOSE;
+	}
+	if (logic.IsBlank(m_graph)) {
+		m_graph.ClearGraph();
+		return GAME_SUCCESS;
+	}
+	return	GAME_PALY;
+}
+
 bool CBasicGame::Link(Vertex avPath[MAX_VERTEX_NUM], int &nVexNum) {
 	//m_ptSelSec,m_ptFirstSecÊÇ·ñÁ¬Í¨
 	if (m_ptSelFirst.row == m_ptSelSec.row && m_ptSelFirst.col == m_ptSelSec.col) {

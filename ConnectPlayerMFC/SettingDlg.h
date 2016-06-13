@@ -29,6 +29,9 @@ public:
 	virtual BOOL OnInitDialog();
 
 protected:
+
+	HICON m_hIcon;
+
 	CThemeOptionDlg m_dlgTheme;
 
 	//virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);

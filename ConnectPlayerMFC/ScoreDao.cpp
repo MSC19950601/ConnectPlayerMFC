@@ -14,7 +14,7 @@ CScoreDao::~CScoreDao()
 
 bool CScoreDao::Save(const CString& strPath, SCORE &score) {
 	CStdioFile file;
-	if (file.Open(strPath, CFile::modeCreate | CFile::modeWrite)) {
+	if (file.Open(strPath, CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite)) {
 
 		CString node;
 		node.Format(_T("0%d"), score.nNode);
@@ -25,7 +25,14 @@ bool CScoreDao::Save(const CString& strPath, SCORE &score) {
 		file.WriteString(score.strName);
 
 		CString scoreS;
-		scoreS.Format(_T("00%d"), score.nGrade);
+		if (score.nGrade < 1000)
+		{
+			scoreS.Format(_T("00%d"), score.nGrade);
+		}
+		else
+		{
+			scoreS.Format(_T("0%d"), score.nGrade);
+		}
 		file.Seek(CFile::begin, CFile::end);
 		file.WriteString(scoreS);
 
@@ -67,8 +74,8 @@ bool CScoreDao::Parse(const CString& strScore, SCORE* pScore, int nMode) {
 	if (_wtoi(modeTemp) == nMode) {
 		pScore->nNode = nMode;
 		pScore->nLevel = _wtoi(strScore.Right(1));
-		pScore->nGrade = _wtoi(strScore.Mid(15, 3));
-		pScore->strName = strScore.Mid(2, 12);
+		pScore->nGrade = _wtoi(strScore.Mid(16, 5));
+		pScore->strName = strScore.Mid(2, 14);
 		return true;
 	}
 	return false;

@@ -23,6 +23,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
+
+	HICON m_hIcon;
+
 	int m_nMode = -1;
 	CListCtrl m_ListRank;
 	afx_msg void OnClickRadio(UINT nID);

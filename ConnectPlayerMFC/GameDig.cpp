@@ -16,6 +16,9 @@ IMPLEMENT_DYNAMIC(CGameDig, CDialogEx)
 CGameDig::CGameDig(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_DIALOG_GAME, pParent)
 {
+
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
 	m_ptGameTop.x = MAP_LEFT;
 	m_ptGameTop.y = MAP_TOP;
 
@@ -36,6 +39,8 @@ CGameDig::CGameDig(CWnd* pParent /*=NULL*/)
 	m_bPause = false;
 
 	m_bProp = false;
+
+	
 
 	//what the fuck!
 	//bSuc = false;
@@ -88,12 +93,54 @@ void CGameDig::InitBackground()
 BOOL CGameDig::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
+	ASSERT(IDM_ABOUTBOX < 0xF000);
+
+	CMenu* pSysMenu = GetSystemMenu(FALSE);
+	if (pSysMenu != NULL)
+	{
+		BOOL bNameValid;
+		CString strAboutMenu;
+		bNameValid = strAboutMenu.LoadString(IDS_ABOUTBOX);
+		ASSERT(bNameValid);
+		if (!strAboutMenu.IsEmpty())
+		{
+			pSysMenu->AppendMenu(MF_SEPARATOR);
+			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
+		}
+	}
+
+	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
+	//  执行此操作
+	SetIcon(m_hIcon, TRUE);			// 设置大图标
+	SetIcon(m_hIcon, FALSE);		// 设置小图标
+
 	this->GetDlgItem(IDC_PROGRESS_BASIC_GAME_MODEL)->ShowWindow(SW_HIDE);
+	this->GetDlgItem(IDC_STATIC_SCORE)->ShowWindow(SW_HIDE);
+
+	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->ShowWindow(SW_HIDE);
+	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->ShowWindow(SW_HIDE);
+	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_PROMPT)->ShowWindow(SW_HIDE);
+	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_REARANGEMENT)->ShowWindow(SW_HIDE);
+	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SETTING)->ShowWindow(SW_HIDE);
+	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_HELP)->ShowWindow(SW_HIDE);
+	this->GetDlgItem(IDC_BUTTON_TRICK)->ShowWindow(SW_HIDE);
 
 	m_flag = m_pGameC->GetGameFlag();
-	if (m_flag.bScore) {
+	if (m_flag.szTitle == _T("欢乐连连看————休闲模式")) {
 
 		this->SetWindowTextW(m_flag.szTitle);
+
+		this->GetDlgItem(IDC_STATIC_SCORE)->ShowWindow(SW_SHOW);
+
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_PROMPT)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_REARANGEMENT)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SETTING)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_HELP)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_TRICK)->ShowWindow(SW_SHOW);
 
 		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_PROMPT)->EnableWindow(FALSE);
 		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_REARANGEMENT)->EnableWindow(FALSE);
@@ -101,12 +148,26 @@ BOOL CGameDig::OnInitDialog()
 
 
 	}
-	else {
+	else if(m_flag.szTitle == _T("欢乐连连看————基本模式")){
 
 		this->SetWindowTextW(m_flag.szTitle);
 
-		this->GetDlgItem(IDC_BUTTON_TRICK)->ShowWindow(SW_HIDE);
-		this->GetDlgItem(IDC_STATIC_SCORE)->ShowWindow(SW_HIDE);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_PROMPT)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_REARANGEMENT)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SETTING)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_HELP)->ShowWindow(SW_SHOW);
+
+	}
+	else {
+		this->SetWindowTextW(m_flag.szTitle);
+
+		this->GetDlgItem(IDC_STATIC_SCORE)->ShowWindow(SW_SHOW);
+
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->ShowWindow(SW_SHOW);
+		this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_SUSPEND_GAME)->ShowWindow(SW_SHOW);
+
 	}
 
 	InitBackground();
@@ -128,10 +189,11 @@ void CGameDig::OnPaint()
 }
 
 void CGameDig::InitElement() {
+	CConfig::GetSingleInstance()->Load();
 	CString elem = CConfig::GetSingleInstance()->GetElemPath();
 	CString mask = CConfig::GetSingleInstance()->GetMaskPath();
 
-	if (CConfig::GetSingleInstance()->GetStyle() == 1) {
+	if (CConfig::GetSingleInstance()->GetStyle() == 1 || m_flag.szTitle == _T("欢乐连连看————关卡模式")) {
 		elem = _T("theme\\element1.bmp");
 		mask = _T("theme\\elementMask1.bmp");
 	}
@@ -152,8 +214,6 @@ void CGameDig::InitElement() {
 	m_dcMark.CreateCompatibleDC(&dc);
 	m_dcMark.SelectObject(bmpMark);
 
-
-
 	HANDLE bmpPause = ::LoadImageW(NULL, _T("background\\background_4.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	m_dcPause.CreateCompatibleDC(&dc);
 	m_dcPause.SelectObject(bmpPause);
@@ -167,9 +227,15 @@ void CGameDig::InitElement() {
 
 void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 {
-	if(!m_flag.bScore)
+	if(m_flag.szTitle == _T("欢乐连连看————基本模式"))
 		this->GetDlgItem(IDC_PROGRESS_BASIC_GAME_MODEL)->ShowWindow(SW_SHOW);
-
+	if (m_flag.szTitle == _T("欢乐连连看————关卡模式")) {
+		this->GetDlgItem(IDC_PROGRESS_BASIC_GAME_MODEL)->ShowWindow(SW_SHOW);
+		int nBarrier = m_pGameC->GetBarrierNum();
+		CString BarrierBeginTip;
+		BarrierBeginTip.Format(_T("%d"), nBarrier);
+		MessageBox(_T("关卡 1 "));
+	}
 	//if (!m_bPause)	return;
 	//初始化游戏地图
 	m_pGameC->StartGame();
@@ -182,11 +248,25 @@ void CGameDig::OnBnClickedButtonBasicModelBeginGame()
 	//开始按钮禁止点击
 	this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(FALSE);
 
-	if (!m_flag.bScore) {
+	if (m_flag.szTitle == _T("欢乐连连看————关卡模式") || m_flag.szTitle == _T("欢乐连连看————休闲模式"))
+	{
+		m_pGameC->SetGrade(0);
+	}
+	if (m_flag.szTitle == _T("欢乐连连看————基本模式")) {
 		//初始化进度条
 		m_GameProgress.SetRange(0, 300);//初始范围
 		m_GameProgress.SetStep(-1);//初始步数值
 		m_GameProgress.SetPos(300);//设置初始值
+								   //启动定时器
+		this->SetTimer(PLAY_TIMER_ID, 1000, NULL);
+		//绘制当前秒数
+		DrawGameTime();
+	}
+	if (m_flag.szTitle == _T("欢乐连连看————关卡模式")) {
+		//初始化进度条
+		m_GameProgress.SetRange(0, 100);//初始范围
+		m_GameProgress.SetStep(-1);//初始步数值
+		m_GameProgress.SetPos(100);//设置初始值
 								   //启动定时器
 		this->SetTimer(PLAY_TIMER_ID, 1000, NULL);
 		//绘制当前秒数
@@ -257,7 +337,7 @@ void CGameDig::OnBnClickedButtonBasicModelSuspendGame()
 	}
 	else {
 		//休闲模式要修改
-		if (!m_flag.bScore) {
+		if (m_flag.szTitle == _T("欢乐连连看————基本模式") || m_flag.szTitle == _T("欢乐连连看————关卡模式")) {
 			this->SetTimer(PLAY_TIMER_ID, 1000, NULL);
 			UpdateMap();
 			InvalidateRect(m_rtGameRect, FALSE);
@@ -392,14 +472,15 @@ void CGameDig::OnLButtonUp(UINT nFlags, CPoint point)
 			//清除
 			UpdateMap();
 			//if(!m_flag.bScore)
-				JudgeWin();
-			if (m_flag.bScore) {
+			
+			if (m_flag.szTitle == _T("欢乐连连看————休闲模式") || m_flag.szTitle == _T("欢乐连连看————关卡模式")) {
 				DrawGameGrade();
 				CalculateGameGrade();
 			}
+			JudgeWin();
 		}
 
-		//使用道具实现
+		//休闲模式使用道具实现
 		if (m_bProp) {
 			bool bSuc = m_pGameC->PropLink();
 			UpdateMap();
@@ -483,14 +564,13 @@ void CGameDig::DrawGameTime()
 
 void CGameDig::JudgeWin()
 {
-	if (m_flag.bScore) {
+	if (m_flag.szTitle == _T("欢乐连连看————休闲模式")) {
 		int	bGameStatus = m_pGameC->IsWin(1000000);
 		if (bGameStatus == GAME_PALY) {
 			return;
 		}
 		else {
 			m_bPlaying = false;
-			KillTimer(PLAY_TIMER_ID);
 
 			CString strTitle;
 			this->GetWindowTextW(strTitle);
@@ -499,20 +579,15 @@ void CGameDig::JudgeWin()
 
 				INT_PTR nRes;
 				nRes = MessageBox(_T("您确定要将积分记入排行榜吗？"), _T("积分记录"), MB_OKCANCEL | MB_ICONQUESTION);
-				if (IDCANCEL == nRes)
-					return;
-				else {
+				if (IDCANCEL != nRes) {
 					m_pGameC->SaveScore();
 				}
+				this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(TRUE);
+				InitBackground();
 			}
-			else
-			{
-				MessageBox(_T("oh, NO!!!! GAME OVER!!!"), strTitle);
-			}
-			this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(TRUE);
 		}
 	}
-	else {
+	if(m_flag.szTitle == _T("欢乐连连看————基本模式")) {
 		int	bGameStatus = m_pGameC->IsWin(m_GameProgress.GetPos());
 		if (bGameStatus == GAME_PALY) {
 			return;
@@ -531,6 +606,47 @@ void CGameDig::JudgeWin()
 				MessageBox(_T("oh, NO!!!! GAME OVER!!!"), strTitle);
 			}
 			this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(TRUE);
+		}
+	}
+	if (m_flag.szTitle == _T("欢乐连连看————关卡模式")) {
+		int	bGameStatus = m_pGameC->IsWin(m_GameProgress.GetPos());
+		if (bGameStatus == GAME_PALY) {
+			return;
+		}
+		else {
+			m_bPlaying = false;
+			CString strTitle;
+			this->GetWindowTextW(strTitle);
+			if (bGameStatus == GAME_NEXT) {
+				MessageBox(_T("通关！"), strTitle);
+				int nBarrier = m_pGameC->GetBarrierNum();
+				nBarrier++;
+				m_pGameC->SetBarrierNum(nBarrier);
+				CString BarrierTip;
+				BarrierTip.Format(_T("关卡 %d"), nBarrier);
+				MessageBox(BarrierTip);
+
+				m_pGameC->StartGame();
+				m_bPlaying = true;
+				barrierFreshElement(nBarrier);
+				//更新界面
+				UpdateMap();
+			}
+			else
+			{
+				MessageBox(_T("oh, NO!!!! TIME IS OVER!!!"), strTitle);
+				INT_PTR nRes;
+				nRes = MessageBox(_T("您确定要将积分记入排行榜吗？"), _T("积分记录"), MB_OKCANCEL | MB_ICONQUESTION);
+				if (IDCANCEL == nRes) {
+
+					return;
+				}
+				else {
+					m_pGameC->SaveScore();
+				}
+				this->GetDlgItem(IDC_BUTTON_BASIC_MODEL_BEGIN_GAME)->EnableWindow(TRUE);
+				InitBackground();
+			}
 		}
 	}
 }
@@ -554,8 +670,10 @@ void CGameDig::DrawGameGrade() {
 	GetClientRect(&rect);
 	CSize size;
 	size = m_dcMem.GetTextExtent(strScore, strScore.GetLength());
-	int x = ((rect.Width() - size.cx) / 2) + 340;
-	int y = ((rect.Height() - size.cy) / 2) + 210;
+	int x, y;
+		x = ((rect.Width() - size.cx) / 2) + 345;
+		y = ((rect.Height() - size.cy) / 2) + 130;
+
 	m_dcMem.TextOutW(x, y, strScore);
 
 	m_dcMem.SelectObject(&scoreFont);
@@ -642,4 +760,37 @@ void CGameDig::UpdateTheme() {
 	default:
 		break;
 	}
+}
+
+void CGameDig::barrierFreshElement(int nBarrier) {
+	CString elem, mask;
+	switch (nBarrier)
+	{
+	case 2:
+		elem = _T("theme\\element2.bmp");
+		mask = _T("theme\\elementMask2.bmp");
+		break;
+	case 3:
+		elem = _T("theme\\element3.bmp");
+		mask = _T("theme\\elementMask3.bmp");
+		break;
+	case 4:
+		elem = _T("theme\\element6.bmp");
+		mask = _T("theme\\elementMask6.bmp");
+		break;
+	case 5:
+		elem = _T("theme\\element5.bmp");
+		mask = _T("theme\\elementMask5.bmp");
+		break;
+	default:
+		return;
+	}
+	CClientDC dc(this);
+	HANDLE bmp = ::LoadImage(NULL, elem, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	m_dcElement.CreateCompatibleDC(&dc);
+	m_dcElement.SelectObject(bmp);
+
+	HANDLE bmpMark = ::LoadImage(NULL, mask, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	m_dcMark.CreateCompatibleDC(&dc);
+	m_dcMark.SelectObject(bmpMark);
 }

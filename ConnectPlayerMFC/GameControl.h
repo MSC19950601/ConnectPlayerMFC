@@ -11,18 +11,7 @@ public:
 
 	virtual void StartGame() = 0;
 
-	virtual int IsWin(int nTime) {
-		GameLogic logic;
-		if (nTime <= 0) {
-			m_graph.ClearGraph();
-			return GAME_LOSE;
-		}
-		if (logic.IsBlank(m_graph)) {
-			m_graph.ClearGraph();
-			return GAME_SUCCESS;
-		}
-		return GAME_PALY;
-	};
+	virtual int IsWin(int nTime) = 0; 
 
 	virtual bool Help(Vertex avPath[MAX_VERTEX_NUM], int &nVexnum) {
 		GameLogic gameLogic;
@@ -64,6 +53,13 @@ public:
 		return true;
 	}
 
+	void SetBarrierNum(int nBarrierNum) {
+		m_nBarrier = nBarrierNum;
+	}
+	int GetBarrierNum() {
+		return m_nBarrier;
+	}
+
 	//ÅÅÐÐ°ñ
 	virtual bool SaveScore() {
 		return false;
@@ -89,7 +85,8 @@ protected:
 	CTest m_test;
 	FLAG m_flag;
 
-	int m_nGrade;
+	int m_nGrade = 0;
 	int m_nProp;
+	int m_nBarrier;
 };
 

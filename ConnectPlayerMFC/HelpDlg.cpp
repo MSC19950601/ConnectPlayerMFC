@@ -14,6 +14,9 @@ IMPLEMENT_DYNAMIC(CHelpDlg, CDialogEx)
 CHelpDlg::CHelpDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_DIALOG_HELP, pParent)
 {
+
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
 	//pos = 1;
 	nMinPos = 1;
 	nMaxPos = 1740;
@@ -94,6 +97,25 @@ BOOL CHelpDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
+	ASSERT(IDM_ABOUTBOX < 0xF000);
+
+	CMenu* pSysMenu = GetSystemMenu(FALSE);
+	if (pSysMenu != NULL)
+	{
+		BOOL bNameValid;
+		CString strAboutMenu;
+		bNameValid = strAboutMenu.LoadString(IDS_ABOUTBOX);
+		ASSERT(bNameValid);
+		if (!strAboutMenu.IsEmpty())
+		{
+			pSysMenu->AppendMenu(MF_SEPARATOR);
+			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
+		}
+	}
+
+	SetIcon(m_hIcon, TRUE);			// 设置大图标
+	SetIcon(m_hIcon, FALSE);		// 设置小图标
 	
 	this->GetClientRect(&rtClient);
 
@@ -130,10 +152,7 @@ BOOL CHelpDlg::OnInitDialog()
 void CHelpDlg::OnPaint()
 {
 
-	CPaintDC dc(this); // device context for painting
-					   // TODO: 在此处添加消息处理程序代码
-					   // 不为绘图消息调用 CDialogEx::OnPaint()
-
+	CPaintDC dc(this); 			
 	dc.BitBlt(0, 0, rtClient.Width(), rtClient.Height(), &m_dcMem, 0, 0, SRCCOPY);
 }
 

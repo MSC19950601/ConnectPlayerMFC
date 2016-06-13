@@ -27,6 +27,9 @@ public:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 
 protected:
+
+	HICON m_hIcon;
+
 	CDC m_dcMem;
 	CDC m_dcHelp;
 	CRect m_rtHelp;

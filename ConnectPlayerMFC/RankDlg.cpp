@@ -18,7 +18,7 @@ IMPLEMENT_DYNAMIC(CRankDlg, CDialogEx)
 CRankDlg::CRankDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_DIALOG_RANK, pParent)
 {
-	
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 CRankDlg::~CRankDlg()
@@ -57,6 +57,29 @@ void CRankDlg::OnClickRadio(UINT nID) {
 BOOL CRankDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	// IDM_ABOUTBOX 必须在系统命令范围内。
+	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
+	ASSERT(IDM_ABOUTBOX < 0xF000);
+
+	CMenu* pSysMenu = GetSystemMenu(FALSE);
+	if (pSysMenu != NULL)
+	{
+		BOOL bNameValid;
+		CString strAboutMenu;
+		bNameValid = strAboutMenu.LoadString(IDS_ABOUTBOX);
+		ASSERT(bNameValid);
+		if (!strAboutMenu.IsEmpty())
+		{
+			pSysMenu->AppendMenu(MF_SEPARATOR);
+			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
+		}
+	}
+
+	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
+	//  执行此操作
+	SetIcon(m_hIcon, TRUE);			// 设置大图标
+	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	LONG lStyle;
 	lStyle = GetWindowLong(m_ListRank.m_hWnd, GWL_STYLE);//获取当前窗口style

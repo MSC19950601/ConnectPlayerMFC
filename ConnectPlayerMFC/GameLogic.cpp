@@ -14,43 +14,12 @@ GameLogic::GameLogic()
 }
 
 
+
 GameLogic::~GameLogic()
 {
 }
 
 void GameLogic::InitMap(CGraph &graph) {
-	/*int anTemp[4][4] = {
-		2,0,1,3,
-		2,2,1,3,
-		2,1,0,0,
-		1,3,0,3
-	};
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++){
-			graph.AddVertex(anTemp[i][j]);
-			UpdateArc(graph, i, j);
-		}
-	}*/
-
-	/*int anTemp[16];
-	//
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			anTemp[i * 4 + j] = i;
-		}
-	}
-	srand((int)time(NULL));
-
-
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			graph.AddVertex(anTemp[i * 4 + j]);
-			UpdateArc(graph, i, j);
-		}
-	}*/
-	//////////////////////////////////////////////////////////////////////////
-	//160µÄÇé¿ö
 	int anTemp[MAX_VERTEX_NUM];
 	for (int i = 0; i < REPEAT_NUM; i++) {
 		for (int j = 0; j < MAX_PIC_NUM; j++) {

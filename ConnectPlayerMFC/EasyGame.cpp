@@ -129,7 +129,7 @@ bool CEasyGame::SaveScore() {
 	newScore.nGrade = finalScore;
 	newScore.nLevel = newScore.nGrade / 500 + 1;
 	newScore.nNode = 1;
-	newScore.strName.Format(_T("%d%d%d%d%d%d"),year,month,day,hour,minute,sec);
+	newScore.strName.Format(_T("%d%02d%02d%02d%02d%02d"),year,month,day,hour,minute,sec);
 	CScoreLogic scoreLogic;
 	if (scoreLogic.SaveScore(newScore)) {
 

@@ -6,6 +6,7 @@
 #include "HelpDlg.h"
 #include "BasicGame.h"
 #include "EasyGame.h"
+#include "BarrierGame.h"
 
 // CGameDig ¶Ô»°¿ò
 
@@ -34,6 +35,7 @@ protected:
 
 
 protected:
+	HICON m_hIcon;
 
 	CDC m_dcMem;
 	CDC m_dcElement;
@@ -90,4 +92,6 @@ public:
 	afx_msg void OnBnClickedButtonTrick();
 
 	void UpdateTheme();
+
+	void barrierFreshElement(int nBarrier);
 };

@@ -40,3 +40,4 @@ typedef struct tagScore {
 #define GAME_LOSE -1
 #define GAME_SUCCESS 0
 #define GAME_PALY 1
+#define GAME_NEXT 2

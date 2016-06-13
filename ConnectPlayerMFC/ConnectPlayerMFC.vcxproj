@@ -189,6 +189,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BarrierGame.h" />
     <ClInclude Include="BasicGame.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="ConfigLogic.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="ThemeOptionDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BarrierGame.cpp" />
     <ClCompile Include="BasicGame.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="ConfigLogic.cpp" />
@@ -245,6 +247,7 @@
     <None Include="res\ConnectPlayerMFC.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="background\newBackground3.bmp" />
     <Image Include="res\bitmap1.bmp" />
     <Image Include="res\ConnectPlayerMFC.ico" />
     <Image Include="res\copyright.bmp" />
